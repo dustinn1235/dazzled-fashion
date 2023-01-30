@@ -3,18 +3,18 @@ import Product from "./Product";
 const Products = () => {
   const items = [
     {
-      name: "test1",
+      name: "TESTNAME",
+      price: 10,
+      imgURL: "/test.webp",
+    },
+    {
+      name: "TESTNAME",
       price: 10,
       imgURL: "/test3.webp",
     },
-    {
-      name: "test2",
-      price: 10,
-      imgURL: "/test2.webp",
-    },
   ];
   return (
-    <div className="flex flex-col">
+    <div className="grid grid-cols-2 gap-x-2">
       {items.map((e) => (
         <Product {...e} />
       ))}

@@ -1,7 +1,11 @@
 const Product = ({ name, price, imgURL }) => {
   return (
-    <div className="bg-red-50 flex justify-center">
-      <img src={imgURL} className="w-[40%]"></img>
+    <div>
+      <div className="flex justify-center h-[15rem]">
+        <img src={imgURL} className="h-full max-w-[90%] object-contain"></img>
+      </div>
+      <h1 className="text-xl text-center mt-6">{name}</h1>
+      <span className="text-lg text-center block">${price.toFixed(2)}</span>
     </div>
   );
 };
