@@ -5,7 +5,7 @@ const Header = () => {
       <div className="flex-1 flex justify-center">
         <img
           src="/logo.png"
-          className="w-full h-full object-cover md:w-3/4 pointer-events-none"
+          className="w-full h-full object-cover md:w-1/2 pointer-events-none"
         ></img>
       </div>
       <span className="flex-1 text-end font-bold text-lg grid items-center">
