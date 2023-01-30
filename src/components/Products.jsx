@@ -10,7 +10,7 @@ const Products = () => {
     {
       name: "TESTNAME",
       price: 10,
-      imgURL: "/rick.webp",
+      imgURL: "/rick1.webp",
     },
     {
       name: "TESTNAME",
