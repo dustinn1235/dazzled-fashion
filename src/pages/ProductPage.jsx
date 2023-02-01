@@ -10,7 +10,7 @@ const ProductPage = () => {
       <div className="w-full mt-8 flex justify-center mb-10">
         <img src={product.imgURL} className="w-[45%] object-contain"></img>
       </div>
-      <h1 className="font-bold text-[1.6rem] w-[60%] break-words">
+      <h1 className="font-medium text-[1.5rem] w-[60%] break-words">
         {product.name}
       </h1>
       <h2 className="text-[1.3rem]">${product.price.toFixed(2)}</h2>

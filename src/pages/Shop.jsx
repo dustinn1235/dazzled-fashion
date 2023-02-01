@@ -3,7 +3,7 @@ import Products from "../components/Products";
 
 const Shop = () => {
   return (
-    <div>
+    <div className="flex justify-center w-full">
       <Products />
     </div>
   );
