@@ -7,6 +7,7 @@ import Shop from "./pages/Shop";
 - Change Menu/Cart into icons
 - Create page for each product
 - Design product page
+  - Instagram carousel
 - Design cart page
 - Create payment page
 - Add footer
@@ -14,7 +15,7 @@ import Shop from "./pages/Shop";
 
 function App() {
   return (
-    <div className="w-screen px-4 pt-10 md:px-6 flex flex-col items-center font-montserrat">
+    <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat">
       <Header />
       <Routes>
         <Route path="/" element={<Shop />} />
