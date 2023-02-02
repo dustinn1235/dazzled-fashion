@@ -9,6 +9,7 @@ import Shop from "./pages/Shop";
 - Design product page
   - Instagram carousel
     - Dot
+    - Add swipe event
 - Design cart page
 - Create payment page
 - Add footer

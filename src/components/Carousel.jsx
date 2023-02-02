@@ -6,30 +6,48 @@ const Carousel = ({ product }) => {
   const [curIndex, setCurIndex] = useState(0);
   const translateX = -100;
 
-  const buttonHandle = () => {
-    if (curIndex == imgs.length - 1) {
+  const buttonHandle = (direction) => {
+    if (direction === 1 && curIndex === imgs.length - 1) {
       setCurIndex(0);
-    } else setCurIndex(curIndex + 1);
+    } else if (direction === -1 && curIndex === 0) {
+      setCurIndex(imgs.length - 1);
+    } else setCurIndex(curIndex + direction);
   };
 
   return (
     <>
       <div
-        className={`flex w-full transition ease-in-out duration-200 translate-x-[${
+        className={`flex w-full aspect-square transition ease-in-out duration-200 translate-x-[${
           curIndex * translateX
         }%]`}
-        // className={`flex w-full transition ease-in-out duration-200 translate-x-[-200%]`}
       >
         {imgs.map((e) => (
-          <div className="min-w-full flex justify-center mb-10" key={e}>
-            <img src={e} className="w-[45%] object-contain"></img>
+          <div className="min-w-full flex justify-center" key={e}>
+            <img
+              src={e}
+              className="w-[50%] max-h-full object-contain"
+              alt={product.name}
+            ></img>
           </div>
         ))}
       </div>
-      <button className="w-1/2 bg-green-300" onClick={() => buttonHandle()}>
+      <div className="w-full flex justify-center text-center gap-[2%] text-[1.5rem] my-4">
+        {imgs.map((e, i) => (
+          <button
+            key={i}
+            className={`w-[2%] aspect-square bg-zinc-400 rounded-full transition duration-300 ${
+              i === curIndex && "bg-zinc-600"
+            }`}
+          ></button>
+        ))}
+      </div>
+
+      <button className="w-1/2 bg-green-300 " onClick={() => buttonHandle(-1)}>
         {curIndex}
       </button>
-      <button className="w-1/2 bg-red-300">right</button>
+      <button className="w-1/2 bg-red-300" onClick={() => buttonHandle(1)}>
+        right
+      </button>
     </>
   );
 };
