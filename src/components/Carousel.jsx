@@ -17,9 +17,8 @@ const Carousel = ({ product }) => {
   return (
     <>
       <div
-        className={`flex w-full aspect-square transition ease-in-out duration-200 translate-x-[${
-          curIndex * translateX
-        }%]`}
+        className={`flex w-full aspect-square transition ease-in-out duration-200`}
+        style={{ transform: `translateX(${curIndex * translateX}%)` }}
       >
         {imgs.map((e) => (
           <div className="min-w-full flex justify-center" key={e}>
