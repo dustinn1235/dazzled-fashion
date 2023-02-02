@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 
 const Carousel = ({ product }) => {
   // get more image from API
@@ -14,11 +15,17 @@ const Carousel = ({ product }) => {
     } else setCurIndex(curIndex + direction);
   };
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => buttonHandle(1),
+    onSwipedRight: () => buttonHandle(-1),
+  });
+
   return (
     <>
       <div
         className={`flex w-full aspect-square transition ease-in-out duration-200`}
         style={{ transform: `translateX(${curIndex * translateX}%)` }}
+        {...swipeHandlers}
       >
         {imgs.map((e) => (
           <div className="min-w-full flex justify-center" key={e}>
@@ -40,13 +47,6 @@ const Carousel = ({ product }) => {
           ></button>
         ))}
       </div>
-
-      <button className="w-1/2 bg-green-300 " onClick={() => buttonHandle(-1)}>
-        {curIndex}
-      </button>
-      <button className="w-1/2 bg-red-300" onClick={() => buttonHandle(1)}>
-        right
-      </button>
     </>
   );
 };

@@ -10,6 +10,7 @@ import Shop from "./pages/Shop";
   - Instagram carousel
     - Dot
     - Add swipe event
+  - Quantity input validation
 - Design cart page
 - Create payment page
 - Add footer
