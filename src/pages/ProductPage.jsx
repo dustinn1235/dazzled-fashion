@@ -1,15 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import Carousel from "../components/Carousel";
 
 const ProductPage = () => {
   const location = useLocation();
   const product = location.state;
-  console.log(product);
   return (
     <div>
-      <div className="w-full mt-8 flex justify-center mb-10">
-        <img src={product.imgURL} className="w-[45%] object-contain"></img>
-      </div>
+      <Carousel product={product} />
       <h1 className="font-medium text-[1.5rem] w-[60%] break-words">
         {product.name}
       </h1>

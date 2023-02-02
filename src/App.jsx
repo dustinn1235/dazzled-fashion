@@ -16,7 +16,7 @@ import Shop from "./pages/Shop";
 
 function App() {
   return (
-    <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat">
+    <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat overflow-x-hidden">
       <Header />
       <Routes>
         <Route path="/" element={<Shop />} />
