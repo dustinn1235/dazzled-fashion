@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Product = ({ product }) => {
   return (
-    <Link to={`/shop/${product.name}`} state={product} className="">
+    <Link to={`/shop/${product.name}`} state={product}>
       <div className="flex justify-center items-end w-full aspect-[1/1.2]">
         <img
           src={product.imgURL}

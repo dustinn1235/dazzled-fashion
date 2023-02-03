@@ -6,16 +6,19 @@ const Products = () => {
       name: "TESTNAME1",
       price: 10,
       imgURL: "/test.webp",
+      sizes: ["S", "M"],
     },
     {
       name: "TESTNAME2",
       price: 10,
       imgURL: "/rick1.webp",
+      sizes: ["S", "M"],
     },
     {
       name: "TESTNAME3",
       price: 10,
       imgURL: "/test3.webp",
+      sizes: ["S", "M"],
     },
   ];
 
