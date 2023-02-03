@@ -10,9 +10,12 @@ const Header = () => {
           className="w-full h-full object-cover md:w-1/2 pointer-events-none"
         ></img>
       </Link>
-      <span className="flex-1 text-end font-bold text-lg grid items-center">
+      <Link
+        to="/cart"
+        className="flex-1 text-end font-bold text-lg grid items-center"
+      >
         CART (0)
-      </span>
+      </Link>
     </div>
   );
 };

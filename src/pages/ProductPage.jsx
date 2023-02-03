@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Carousel from "../components/Carousel";
 import { setInputFilter } from "../utils/InputFilter";
+import { useCartUpdate } from "../utils/CartContext";
 
 const ProductPage = () => {
   const location = useLocation();
@@ -18,6 +19,9 @@ const ProductPage = () => {
       "Must be between 1 and 99"
     );
   }, [quantityInput]);
+
+  // Get update function
+  const { addItem, removeItem } = useCartUpdate();
 
   return (
     <div>
@@ -36,9 +40,13 @@ const ProductPage = () => {
         placeholder="Quantity"
         ref={quantityInput}
       ></input>
-      <button className="w-full mt-8 font-bold text-white bg-black h-[2.5rem]">
+      <button
+        className="w-full mt-8 font-bold text-white bg-black h-[2.5rem]"
+        onClick={() => addItem(product)}
+      >
         ADD TO CART
       </button>
+      <button onClick={() => removeItem(product)}>test</button>
     </div>
   );
 };
