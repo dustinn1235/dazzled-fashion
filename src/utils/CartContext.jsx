@@ -34,16 +34,17 @@ export const CartProvider = ({ children }) => {
     isDelete && setNumItem(numItem - item.qty);
   };
 
-  // const changeQty = (item, qty) => {
-  //   cart.set(item.name + item.size, { ...item, qty });
-  //   setCart(new Map(cart));
-  // };
+  const changeQty = (item, qty, diff) => {
+    cart.set(item.name + item.size, { ...item, qty });
+    setCart(new Map(cart));
+    setNumItem(numItem + diff);
+  };
 
   useEffect(() => console.log(cart), [cart]);
 
   return (
     <CartContext.Provider value={{ cart, numItem }}>
-      <CartUpdateContext.Provider value={{ addItem, removeItem }}>
+      <CartUpdateContext.Provider value={{ addItem, removeItem, changeQty }}>
         {children}
       </CartUpdateContext.Provider>
     </CartContext.Provider>

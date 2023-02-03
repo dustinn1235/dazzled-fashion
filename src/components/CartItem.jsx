@@ -4,7 +4,7 @@ import { useCart, useCartUpdate } from "../utils/CartContext";
 import { setInputFilter } from "../utils/InputFilter";
 
 const CartItem = ({ item }) => {
-  const { removeItem } = useCartUpdate();
+  const { removeItem, changeQty } = useCartUpdate();
   const qtyInput = useRef();
 
   // get current qty
@@ -22,6 +22,15 @@ const CartItem = ({ item }) => {
     );
   }, [qtyInput]);
 
+  const handleInput = (e) => {
+    const value = e.target.value;
+    if (value) {
+      const diff = value - curQty;
+      changeQty(item, value, diff);
+      setCurQty(value);
+    }
+  };
+
   return (
     <div className="grid grid-rows-[0.5fr,1fr,4fr] grid-cols-[1.5fr,2fr,1.2fr] gap-x-4 w-full aspect-[1/0.5]">
       <Link
@@ -34,7 +43,6 @@ const CartItem = ({ item }) => {
           className="h-fit max-h-full w-full object-contain aspect-[1/2]"
         ></img>
       </Link>
-
       <Link
         to={`/shop/${item.name}`}
         state={item}
@@ -50,7 +58,10 @@ const CartItem = ({ item }) => {
         className="border-[1px] border-black w-full mt-4 px-2 col-start-3 h-[min(2rem,70%)] text-right"
         defaultValue={curQty}
         ref={qtyInput}
-        onChange={(e) => setCurQty(e.target.value)}
+        onChange={(e) => handleInput(e)}
+        onBlur={(e) => {
+          if (e.target.value === "") e.target.value = curQty;
+        }}
       ></input>
       <button
         className="row-start-3 col-start-3 mt-auto text-end h-[min(2rem,20%)] underline"
