@@ -46,11 +46,11 @@ const CartItem = ({ item }) => {
       <Link
         to={`/shop/${item.name}`}
         state={item}
-        className="col-start-2 font-semibold text-[1.1rem] break-words"
+        className="col-start-2 font-semibold text-[1rem] break-words"
       >
         {item.name}
       </Link>
-      <span className="w-1/3 h-[min(2rem,70%)] col-start-2 row-start-2 font-medium">
+      <span className="w-1/3 h-[min(2rem,70%)] col-start-2 row-start-2 font-medium text-[0.9rem]">
         Size: {item.size}
       </span>
       <span className="text-right">${(item.price * curQty).toFixed(2)}</span>
