@@ -4,6 +4,7 @@ import ProductPage from "./pages/ProductPage";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import { CartProvider } from "./utils/CartContext";
+import Footer from "./components/Footer";
 
 /* TODO
 - Change Menu/Cart into icons
@@ -28,6 +29,7 @@ function App() {
           <Route path="/shop/:id" element={<ProductPage />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
+        <Footer />
       </div>
     </CartProvider>
   );
