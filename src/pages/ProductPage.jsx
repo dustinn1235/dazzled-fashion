@@ -8,7 +8,7 @@ const ProductPage = () => {
   const product = location.state;
 
   // Get update function
-  const { addItem, removeItem } = useCartUpdate();
+  const { addItem } = useCartUpdate();
   // Get size input
   const sizeInput = useRef();
 

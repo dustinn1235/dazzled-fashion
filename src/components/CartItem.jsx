@@ -39,7 +39,7 @@ const CartItem = ({ item }) => {
         className="row-start-1 row-span-full"
       >
         <img
-          src="/rick1.webp"
+          src={item.imgURL[0]}
           className="h-fit max-h-full w-full object-contain aspect-[1/2]"
         ></img>
       </Link>

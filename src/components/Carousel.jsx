@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
 const Carousel = ({ product }) => {
-  // get more image from API
-  const imgs = ["/rick1.webp", "/rick2.webp", "/rick3.webp"];
+  const imgs = product.imgURL;
   const [curIndex, setCurIndex] = useState(0);
   const translateX = -100;
 
@@ -31,7 +30,7 @@ const Carousel = ({ product }) => {
           <div className="min-w-full flex justify-center" key={e}>
             <img
               src={e}
-              className="w-[50%] max-h-full object-contain"
+              className="max-w-[70%] max-h-full object-contain"
               alt={product.name}
             ></img>
           </div>
