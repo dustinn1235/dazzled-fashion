@@ -22,7 +22,7 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <CartProvider>
-      <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat overflow-x-hidden">
+      <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat overflow-x-hidden cursor-crosshair">
         <Header />
         <Routes>
           <Route path="/" element={<Shop />} />

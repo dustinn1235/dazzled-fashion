@@ -18,7 +18,7 @@ const Cart = () => {
   const total = useMemo(() => calculateTotal(), [cart]);
 
   return (
-    <div className="w-full">
+    <div className="w-full md:max-w-[90%] lg:max-w-[80%]">
       <h1 className="font-bold text-[1.5rem] mb-4">Shopping Cart</h1>
       {itemArr.length === 0 ? (
         <div>

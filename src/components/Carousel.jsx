@@ -20,7 +20,7 @@ const Carousel = ({ product }) => {
   });
 
   return (
-    <>
+    <div className="overflow-hidden">
       <div
         className={`flex w-full aspect-square transition ease-in-out duration-200`}
         style={{ transform: `translateX(${curIndex * translateX}%)` }}
@@ -46,7 +46,7 @@ const Carousel = ({ product }) => {
           ></button>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
