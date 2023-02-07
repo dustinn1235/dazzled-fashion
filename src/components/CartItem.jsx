@@ -32,7 +32,7 @@ const CartItem = ({ item }) => {
   };
 
   return (
-    <div className="grid grid-rows-[0.5fr,1fr,4fr] grid-cols-[1.5fr,2fr,1.2fr] gap-x-4 w-full aspect-[1/0.5]">
+    <div className="grid grid-rows-[0.5fr,1fr,4fr] grid-cols-[1.5fr,2fr,1.2fr] gap-x-4 w-full aspect-[1/0.5] max-h-[40vh]">
       <Link
         to={`/shop/${item.name}`}
         state={item}
