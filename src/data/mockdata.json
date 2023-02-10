@@ -7,7 +7,7 @@
   },
   {
     "name": "TESTNAME2",
-    "price": 10,
+    "price": 15,
     "imgURL": ["/top2.webp", "/top2more1.webp", "/top2more2.webp"],
     "sizes": ["S", "M"]
   },
