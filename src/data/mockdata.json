@@ -13,7 +13,7 @@
   },
   {
     "name": "TESTNAME3",
-    "price": 10,
+    "price": 20,
     "imgURL": ["/bot1.webp", "/bot1more1.webp", "/bot1more2.webp"],
     "sizes": ["S", "M"]
   },
