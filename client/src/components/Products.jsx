@@ -1,7 +1,6 @@
 import Product from "./Product";
-import items from "../data/mockdata.json";
 
-const Products = () => {
+const Products = ({ items }) => {
   return (
     <div className="grid grid-cols-2 gap-x-2 gap-y-14 md:grid-cols-3 lg:w-[80%]">
       {items.map((e) => (
