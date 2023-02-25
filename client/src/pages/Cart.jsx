@@ -1,11 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem";
-import { useCart } from "../utils/CartContext";
+import Modal from "../components/Modal";
+import { useCart, useCartUpdate } from "../utils/CartContext";
 
 const Cart = () => {
   const { cart } = useCart();
+  const { changeQty } = useCartUpdate();
   const itemArr = Array.from(cart.keys());
+  const [showModal, setShowModal] = useState(false);
 
   // calculate sub total of current
   const calculateTotal = () => {
@@ -16,6 +19,52 @@ const Cart = () => {
     return total;
   };
   const total = useMemo(() => calculateTotal(), [cart]);
+
+  const sendOrder = async (data) => {
+    const URL = "http://localhost:5000/api/addOrder";
+    const res = await fetch(URL, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    // if not enough in stock
+    if (res.status !== 200) {
+      // show message modal
+      setShowModal(!showModal);
+      // update cart qty
+      const msg = await res.json();
+      // const msg = { TESTNAME1S: 0 };
+      for (const e in msg) {
+        const diff = msg[e] - cart.get(e).qty;
+        changeQty(cart.get(e), msg[e], diff);
+      }
+    } else {
+      console.log("Success");
+    }
+  };
+
+  const handleOrderSubmit = () => {
+    // create obj to post to database
+    const obj = {};
+    obj.userName = "test_user";
+    obj.subTotal = total;
+    obj.date = new Date();
+    // Add every time in cart
+    obj.items = [];
+    for (const key of cart.keys()) {
+      const itemJSON = {};
+      const value = cart.get(key);
+      itemJSON.name = value.name;
+      itemJSON.price = value.price;
+      itemJSON.qty = value.qty;
+      itemJSON.size = value.size;
+      obj.items.push(itemJSON);
+    }
+    sendOrder(obj);
+  };
 
   return (
     <div className="w-full md:max-w-[90%] lg:max-w-[min(80%,60rem)]">
@@ -44,13 +93,14 @@ const Cart = () => {
             </div>
             <button
               className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold"
-              onClick={() => console.log(total, cart)}
+              onClick={handleOrderSubmit}
             >
               CHECK OUT
             </button>
           </div>
         </div>
       )}
+      <Modal hidden={showModal} setHidden={setShowModal}></Modal>
     </div>
   );
 };

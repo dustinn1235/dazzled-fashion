@@ -37,7 +37,7 @@ export const CartProvider = ({ children }) => {
   const changeQty = (item, qty, diff) => {
     cart.set(item.name + item.size, { ...item, qty });
     setCart(new Map(cart));
-    setNumItem(numItem + diff);
+    setNumItem((numItem) => numItem + diff);
   };
 
   useEffect(() => console.log(cart), [cart]);

@@ -4,6 +4,7 @@ import ProductPage from "./pages/ProductPage";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import { CartProvider } from "./utils/CartContext";
+import { StockProvider } from "./utils/StockContext";
 import Footer from "./components/Footer";
 
 /* TODO
@@ -22,15 +23,17 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <CartProvider>
-      <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat overflow-x-hidden cursor-crosshair">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Shop />} />
-          <Route path="/shop/:id" element={<ProductPage />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        <Footer />
-      </div>
+      <StockProvider>
+        <div className="w-screen px-4 py-10 md:px-6 flex flex-col items-center font-montserrat overflow-x-hidden cursor-crosshair">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Shop />} />
+            <Route path="/shop/:id" element={<ProductPage />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+          <Footer />
+        </div>
+      </StockProvider>
     </CartProvider>
   );
 }

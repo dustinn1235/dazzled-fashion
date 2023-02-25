@@ -13,15 +13,25 @@ const CartItem = ({ item }) => {
 
   // check the input after ref bind to the input element
   useEffect(() => {
-    setInputFilter(
-      qtyInput.current,
-      (value) =>
-        /^\d*$/.test(value) &&
-        (value === "" || (parseInt(value) <= 20 && parseInt(value) >= 1)),
-      "Must be between 1 and 20"
-    );
+    if (qtyInput.current) {
+      setInputFilter(
+        qtyInput.current,
+        (value) =>
+          /^\d*$/.test(value) &&
+          (value === "" || (parseInt(value) <= 20 && parseInt(value) >= 1)),
+        "Must be between 1 and 20"
+      );
+    }
   }, [qtyInput]);
 
+  // update input according to cart qty
+  useEffect(() => {
+    const tempQty = cart.get(item.name + item.size).qty;
+    tempQty !== 0 && (qtyInput.current.value = tempQty);
+    setCurQty(tempQty);
+  }, [cart]);
+
+  // change cart qty according to user input
   const handleInput = (e) => {
     const value = e.target.value;
     if (value) {
@@ -54,15 +64,22 @@ const CartItem = ({ item }) => {
         Size: {item.size}
       </span>
       <span className="text-right">${(item.price * curQty).toFixed(2)}</span>
-      <input
-        className="border-[1px] border-black w-full mt-4 px-2 col-start-3 h-[min(2rem,70%)] text-right"
-        defaultValue={curQty}
-        ref={qtyInput}
-        onChange={(e) => handleInput(e)}
-        onBlur={(e) => {
-          if (e.target.value === "") e.target.value = curQty;
-        }}
-      ></input>
+      {curQty !== 0 ? (
+        <input
+          className="border-[1px] border-black w-full mt-4 px-2 col-start-3 h-[min(2rem,70%)] text-right"
+          defaultValue={curQty}
+          ref={qtyInput}
+          onChange={(e) => handleInput(e)}
+          onBlur={(e) => {
+            if (e.target.value === "") e.target.value = curQty;
+          }}
+        ></input>
+      ) : (
+        <div className="border-[1px] border-black w-full mt-4 px-2 col-start-3 h-[min(2rem,70%)] text-right flex justify-center items-center">
+          <p className="text-sm">OUT OF STOCK</p>
+        </div>
+      )}
+
       <button
         className="row-start-3 col-start-3 mt-auto text-end h-[min(2rem,20%)] underline"
         onClick={() => removeItem(item)}
