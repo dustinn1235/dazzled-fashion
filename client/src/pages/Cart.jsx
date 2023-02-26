@@ -6,9 +6,14 @@ import { useCart, useCartUpdate } from "../utils/CartContext";
 
 const Cart = () => {
   const { cart } = useCart();
-  const { changeQty } = useCartUpdate();
+  const { changeQty, resetCart } = useCartUpdate();
   const itemArr = Array.from(cart.keys());
+  // use to set a modal when submitting order
   const [showModal, setShowModal] = useState(false);
+  // use to set loading modal when submitting order
+  const [isLoading, setIsLoading] = useState(false);
+  // use to display confirmation message
+  const [isFetchSuccess, setIsFetchSuccess] = useState(false);
 
   // calculate sub total of current
   const calculateTotal = () => {
@@ -21,6 +26,9 @@ const Cart = () => {
   const total = useMemo(() => calculateTotal(), [cart]);
 
   const sendOrder = async (data) => {
+    // show message modal
+    setShowModal(!showModal);
+    setIsLoading(true);
     const URL = "http://localhost:5000/api/addOrder";
     const res = await fetch(URL, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -29,19 +37,21 @@ const Cart = () => {
       },
       body: JSON.stringify(data),
     });
+    setTimeout(() => setIsLoading(false), 200);
 
     // if not enough in stock
     if (res.status !== 200) {
-      // show message modal
-      setShowModal(!showModal);
       // update cart qty
       const msg = await res.json();
-      // const msg = { TESTNAME1S: 0 };
       for (const e in msg) {
         const diff = msg[e] - cart.get(e).qty;
         changeQty(cart.get(e), msg[e], diff);
       }
     } else {
+      // Order complete
+      setIsFetchSuccess(true);
+      // reset cart
+      resetCart();
       console.log("Success");
     }
   };
@@ -100,7 +110,12 @@ const Cart = () => {
           </div>
         </div>
       )}
-      <Modal hidden={showModal} setHidden={setShowModal}></Modal>
+      <Modal
+        hidden={showModal}
+        setHidden={setShowModal}
+        isLoading={isLoading}
+        isFetchSuccess={isFetchSuccess}
+      ></Modal>
     </div>
   );
 };
