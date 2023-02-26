@@ -5,14 +5,12 @@ const db = require("../connect");
 // check if items are available
 router.post("/", async (req, res) => {
   // TODO add data validation
-  // TODO create order table and add the following order to the database
   if (!req) res.status(418).send({ message: "Invalid data!" });
   // arrray to store items that are out of stock
-  const outOfStockItems = [];
+  const outOfStockItems = {};
 
   // loop through each item in the request body
   for (const item of req.body.items) {
-
     const name = item.name;
     const size = item.size;
     const qty = item.qty;
@@ -48,22 +46,15 @@ router.post("/", async (req, res) => {
                 if (err) throw err;
               });
               resolve();
-
-
-
             }
-            // if the qty of the item is less than the qty in the request body 
+            // if the qty of the item is less than the qty in the request body
             else {
               console.log("item not available");
-              outOfStockItems.push({
-                name: item.name,
-                size: item.size,
-                qty: results[0].qty
-              });
+              outOfStockItems[item.name + item.size] = results[0].qty;
               resolve();
             }
           }
-          // if the item is not found in the database 
+          // if the item is not found in the database
           else {
             console.log("item not found but no error");
             reject("Item is not available");
@@ -71,19 +62,15 @@ router.post("/", async (req, res) => {
         }
       });
     });
-
   }
 
   // if there are items that are out of stock
-  if (outOfStockItems.length > 0) {
+  if (Object.keys(outOfStockItems).length > 0) {
     console.log("out of stock items below");
     console.log(outOfStockItems);
-    res.status(400).json({
-      message: "Some items are not available",
-      unavailableItems: outOfStockItems
-    });
+    res.status(400).json(outOfStockItems);
 
-  // if all items are available
+    // if all items are available
   } else {
     console.log(req.body);
     res.status(200).json({ message: "All items are available" });
@@ -91,7 +78,3 @@ router.post("/", async (req, res) => {
 });
 
 module.exports = router;
-
-
-
-
