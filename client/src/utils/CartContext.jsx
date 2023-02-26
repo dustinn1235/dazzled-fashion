@@ -40,11 +40,18 @@ export const CartProvider = ({ children }) => {
     setNumItem((numItem) => numItem + diff);
   };
 
+  const resetCart = () => {
+    setCart(new Map());
+    setNumItem(0);
+  };
+
   useEffect(() => console.log(cart), [cart]);
 
   return (
     <CartContext.Provider value={{ cart, numItem }}>
-      <CartUpdateContext.Provider value={{ addItem, removeItem, changeQty }}>
+      <CartUpdateContext.Provider
+        value={{ addItem, removeItem, changeQty, resetCart }}
+      >
         {children}
       </CartUpdateContext.Provider>
     </CartContext.Provider>

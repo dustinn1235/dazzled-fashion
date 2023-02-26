@@ -33,7 +33,7 @@ const CartItem = ({ item }) => {
 
   // change cart qty according to user input
   const handleInput = (e) => {
-    const value = e.target.value;
+    const value = parseInt(e.target.value);
     if (value) {
       const diff = value - curQty;
       changeQty(item, value, diff);
@@ -76,7 +76,7 @@ const CartItem = ({ item }) => {
         ></input>
       ) : (
         <div className="border-[1px] border-black w-full mt-4 px-2 col-start-3 h-[min(2rem,70%)] text-right flex justify-center items-center">
-          <p className="text-sm">OUT OF STOCK</p>
+          <p className="text-xs md:text-sm">OUT OF STOCK</p>
         </div>
       )}
 
