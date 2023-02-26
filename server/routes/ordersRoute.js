@@ -18,7 +18,7 @@ const validateData = (req, res, next) => {
 
     !req.body.items
   ) {
-    return res.status(400).json({ message: "Invalid data" });
+    return res.status(418).json({ message: "Invalid data" });
   }
   // Check items in the cart
   for (let i = 0; i < req.body.items.length; i++) {
@@ -33,14 +33,14 @@ const validateData = (req, res, next) => {
       req.body.items[i].qty < 0 || 
       req.body.items[i].price < 0 
     ){
-      return res.status(400).json({ message: "Invalid data" });
+      return res.status(418).json({ message: "Invalid data" });
     }
     let itemTotal = req.body.items[i].qty * req.body.items[i].price;
     total += itemTotal;
   }
 
   // If total of items in the cart not equal to subtotal, invalid request.
-  if (total !== req.body.subTotal) return res.status(400).json({ message: "Invalid data" });
+  if (total !== req.body.subTotal) return res.status(418).json({ message: "Invalid data" });
   next();
 };
 
