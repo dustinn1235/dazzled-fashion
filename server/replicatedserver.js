@@ -1,6 +1,7 @@
 const express = require("express");
 const port = process.env.PORT || 5001;
 const cors = require("cors");
+const rdb = require("./replicatedconnect");
 require("dotenv").config();
 
 // use for local test connection with frontend. Default does not let frontend fetch from local ip api
@@ -12,7 +13,7 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api/copydatabase", require("./routes/repRoute"));
-// app.use("/api/checkdatabase", require("./routes/repRoute"));
 
 app.listen(port, () => console.log("Server Started"));
+
+
