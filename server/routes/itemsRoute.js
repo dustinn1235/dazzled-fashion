@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
   GROUP BY items.id;
   `;
 
-  await db.query(sql, (err, result) => {
+  await db.all(sql, [], (err, result) => {
     if (err) throw err;
     else {
       const data = JSON.parse(JSON.stringify(result));
