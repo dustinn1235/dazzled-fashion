@@ -14,7 +14,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 const connectDB = require("./connect");
 // make db connection based on port number
-connectDB(port);
+connectDB(parseInt(port));
+// set up communication
+const { setUpSubscribe } = require("./communicate");
+setUpSubscribe(port);
 
 app.use("/api/items", require("./routes/itemsRoute"));
 app.use("/api/addOrder", require("./routes/ordersRoute"));
