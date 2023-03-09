@@ -57,14 +57,17 @@ router.post("/", async (req, res) => {
     const qty = item.qty;
     // query the database to get the qty of the item
     let sql = `
-      SELECT item_sizes.size, item_sizes.qty
+      SELECT size, qty
       FROM item_sizes
-      JOIN items ON item_sizes.item_id = items.id
-      WHERE items.name = "${item.name}" AND item_sizes.size = "${item.size}";
+      WHERE item_id = (
+        SELECT id
+        FROM items
+        WHERE name = '${item.name}'
+      ) AND size = '${item.size}';
     `;
     // wait for the query to finish
     await new Promise((resolve, reject) => {
-      db.query(sql, (error, results) => {
+      db.all(sql, (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -79,11 +82,15 @@ router.post("/", async (req, res) => {
               console.log("item is available");
               let update = `
                 UPDATE item_sizes
-                JOIN items ON item_sizes.item_id = items.id
-                SET item_sizes.qty = (item_sizes.qty - ${qty})
-                WHERE items.name = "${name}" AND item_sizes.size = "${size}";`;
+                SET qty = (qty - ${qty})
+                WHERE item_id = (
+                  SELECT id
+                  FROM items
+                  WHERE name = '${name}'
+                ) AND size = '${size}';
+              `;
 
-              db.query(update, (err, result) => {
+              db.run(update, (err, result) => {
                 if (err) throw err;
               });
               resolve();
