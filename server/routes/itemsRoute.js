@@ -8,10 +8,9 @@ router.get("/", async (req, res) => {
   SELECT
     items.name AS name,
     items.price AS price,
-    GROUP_CONCAT(DISTINCT item_images.img_url) AS imgURL,
-    GROUP_CONCAT(DISTINCT item_sizes.size) AS sizes
+    (SELECT GROUP_CONCAT(item_images.img_url, ',') FROM item_images WHERE item_images.item_id = items.id ORDER BY item_images.id) AS imgURL,
+    GROUP_CONCAT(item_sizes.size, ',') AS sizes
   FROM items
-  LEFT JOIN item_images ON items.id = item_images.item_id
   LEFT JOIN item_sizes ON items.id = item_sizes.item_id
   GROUP BY items.id;
   `;

@@ -12,6 +12,9 @@ const corsOptions = {
 const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
+const connectDB = require("./connect");
+// make db connection based on port number
+connectDB(port);
 
 app.use("/api/items", require("./routes/itemsRoute"));
 app.use("/api/addOrder", require("./routes/ordersRoute"));
