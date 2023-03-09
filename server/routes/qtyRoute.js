@@ -11,7 +11,7 @@ router.get("/:name", async (req, res) => {
     JOIN items ON item_sizes.item_id = items.id
     WHERE items.name = "${name}";`;
 
-  await db.query(sql, (err, result) => {
+  await db.all(sql, (err, result) => {
     if (err) throw err;
     else {
       const data = {};

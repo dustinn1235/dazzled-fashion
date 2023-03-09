@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
     `;
     // wait for the query to finish
     await new Promise((resolve, reject) => {
-      db.query(sql, (error, results) => {
+      db.all(sql, (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -83,7 +83,7 @@ router.post("/", async (req, res) => {
                 SET item_sizes.qty = (item_sizes.qty - ${qty})
                 WHERE items.name = "${name}" AND item_sizes.size = "${size}";`;
 
-              db.query(update, (err, result) => {
+              db.all(update, (err, result) => {
                 if (err) throw err;
               });
               resolve();
