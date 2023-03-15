@@ -119,6 +119,10 @@ const handler = async (req, res) => {
 	const { method, url, headers, body } = req;
 	const serverUrl = getNextHealthyServer();
 
+    const clientIP = req.connection.remoteAddress || req.headers['x-forwarded-for'];
+    console.log(`Client ${clientIP} connected to load balancer, requesting: ${url}`);
+  
+
 	if (!serverUrl) {
 		res.status(500).send("No healthy servers available");
 		return;
@@ -143,10 +147,10 @@ app.use((req, res) => {
 });
 
 // Start the load balancer server
-app.listen(80, (err) => {
+app.listen(81, (err) => {
 	err
-		? console.log("Failed to listen on PORT 80")
-		: console.log("Load Balancer Server Listening on PORT 80");
+		? console.log("Failed to listen on PORT 81")
+		: console.log("Load Balancer Server Listening on PORT 81");
 });
 
 // Start the health check interval
