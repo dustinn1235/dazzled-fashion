@@ -48,6 +48,10 @@ const ProductPage = () => {
   useEffect(() => {
     const value = sizeInput.current.value[0];
     qty[value] === 0 ? setDisabled(true) : setDisabled(false);
+    const healthCheckInterval = setInterval(loadBalancerHealthCheck, 3000); // Check every 5 seconds
+    return () => {
+      clearInterval(healthCheckInterval);
+    };
   }, [sizeInput.current?.value]);
 
   return (

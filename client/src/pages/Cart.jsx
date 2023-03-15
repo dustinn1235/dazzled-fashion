@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import Modal from "../components/Modal";
@@ -77,6 +77,14 @@ const Cart = () => {
     }
     sendOrder(obj);
   };
+
+  useEffect(() => {
+    const healthCheckInterval = setInterval(loadBalancerHealthCheck, 3000); // Check every 5 seconds
+
+    return () => {
+      clearInterval(healthCheckInterval);
+    };
+  }, []);
 
   return (
     <div className="w-full md:max-w-[90%] lg:max-w-[min(80%,60rem)]">
