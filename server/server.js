@@ -24,3 +24,15 @@ app.use("/api/addOrder", require("./routes/ordersRoute"));
 app.use("/api/qty", require("./routes/qtyRoute"));
 
 app.listen(port, () => console.log("Server Started on port " + port));
+
+// print a message saying client connected when a client connects
+
+
+
+// io.on("connection", (socket) => {
+//   console.log("Client connected");
+//   // when client disconnects print message
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//   });
+// });

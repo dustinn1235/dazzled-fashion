@@ -29,7 +29,7 @@ const Cart = () => {
     // show message modal
     setShowModal(!showModal);
     setIsLoading(true);
-    const URL = "http://localhost:5000/api/addOrder";
+    const URL = "http://localhost/api/addOrder";
     const res = await fetch(URL, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {

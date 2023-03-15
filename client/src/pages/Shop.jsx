@@ -4,7 +4,7 @@ import Products from "../components/Products";
 const Shop = () => {
   const [items, setItems] = useState([]);
   const fetchItemsData = async () => {
-    const URL = "http://localhost:5000/api/items";
+    const URL = "http://localhost/api/items";
     const res = await fetch(URL);
     const items = await res.json();
     setItems(items);

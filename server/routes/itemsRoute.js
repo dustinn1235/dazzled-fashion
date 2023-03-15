@@ -16,6 +16,7 @@ router.get("/", async (req, res) => {
   `;
 
   await db.all(sql, [], (err, result) => {
+    console.log("client says hi");
     if (err) throw err;
     else {
       const data = JSON.parse(JSON.stringify(result));
@@ -29,5 +30,8 @@ router.get("/", async (req, res) => {
     }
   });
 });
+
+
+
 
 module.exports = router;
