@@ -27,6 +27,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.get("/lb-health-check", (req, res) => {
+	res.status(200).send("OK");
+  });
+
 /**
  * Checks the health of a server and updates its health status.
  * @param {Server} server - The server to check.
