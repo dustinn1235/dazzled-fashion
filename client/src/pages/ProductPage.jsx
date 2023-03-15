@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Carousel from "../components/Carousel";
 import { useCartUpdate } from "../utils/CartContext";
+import {fetchWithLoadBalancerHealthCheck, loadBalancerHealthCheck} from "../utils/loadBalancerUtils";
+
 
 const ProductPage = () => {
   const location = useLocation();
@@ -16,10 +18,15 @@ const ProductPage = () => {
   //   M: 2
   // }
   const fetchQty = async () => {
-    const URL = `http://localhost:80/api/qty/${product.name}`;
-    const res = await fetch(URL);
-    const qty = await res.json();
-    setQty(qty);
+    try {
+      const url = `/api/qty/${product.name}`;
+      console.log("fetching qty" + url);
+      const res = await fetchWithLoadBalancerHealthCheck(url);
+      const qty = await res.json();
+      setQty(qty);
+    } catch (error) {
+      console.error("Error fetching quantity data:", error.message);
+    }
   };
 
   // Get update function

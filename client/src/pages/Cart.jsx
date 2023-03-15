@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import Modal from "../components/Modal";
 import { useCart, useCartUpdate } from "../utils/CartContext";
+import {fetchWithLoadBalancerHealthCheck, loadBalancerHealthCheck} from "../utils/loadBalancerUtils";
+
 
 const Cart = () => {
   const { cart } = useCart();
@@ -29,16 +31,16 @@ const Cart = () => {
     // show message modal
     setShowModal(!showModal);
     setIsLoading(true);
-    const URL = "http://localhost:80/api/addOrder";
-    const res = await fetch(URL, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    const URL = "/api/addOrder";
+    const res = await fetchWithLoadBalancerHealthCheck(URL, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
     setTimeout(() => setIsLoading(false), 200);
-
+  
     // if not enough in stock
     if (res.status !== 200) {
       // update cart qty

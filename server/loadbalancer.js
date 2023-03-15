@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const axios = require("axios");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 /**
  * Server configurations
@@ -26,6 +27,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/lb-health-check", (req, res) => {
 	res.status(200).send("OK");
@@ -124,13 +127,13 @@ const handler = async (req, res) => {
 	const serverUrl = getNextHealthyServer();
 
     const clientIP = req.connection.remoteAddress || req.headers['x-forwarded-for'];
-    console.log(`Client ${clientIP} connected to load balancer, requesting: ${url}`);
-  
+    console.log(`Client ${clientIP} connected to load balancer`);
 
 	if (!serverUrl) {
 		res.status(500).send("No healthy servers available");
 		return;
 	}
+	console.log(`Client ${clientIP} requesting: ` + url);
 
 	try {
 		const response = await axios({
@@ -141,6 +144,7 @@ const handler = async (req, res) => {
 		});
 		res.send(response.data);
 	} catch (err) {
+		console.log("Error forwarding request to server: " + serverUrl + url);
 		res.status(500).send("Server error");
 	}
 };
