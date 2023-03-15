@@ -46,6 +46,7 @@ const validateData = (req) => {
 
 // check if items are available
 router.post("/", async (req, res) => {
+  console.log("New order from client");
   // TODO add data validation
   if (!validateData(req)) res.status(418).send({ message: "Invalid data!" });
   // arrray to store items that are out of stock
