@@ -4,7 +4,11 @@ const db = require("../connect");
 
 // get all qty for all sizes of an item
 router.get("/:name", async (req, res) => {
-  console.log("Client has requested to view an items \n /api/qty from: ", req.headers.referer);
+  console.log(
+    "Client has requested to view an items \n /api/qty from: ",
+    req.headers.referer
+  );
+
   const { name } = req.params;
   let sql = `
     SELECT item_sizes.size, item_sizes.qty

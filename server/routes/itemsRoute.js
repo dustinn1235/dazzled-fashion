@@ -4,8 +4,10 @@ const db = require("../connect");
 
 // get all items
 router.get("/", async (req, res) => {
-
-  console.log("Client has requested to view all items \n /api/items from: ", req.headers.referer);
+  console.log(
+    "Client has requested to view all items \n /api/items from: ",
+    req.headers.referer
+  );
 
   let sql = `
   SELECT
@@ -19,7 +21,6 @@ router.get("/", async (req, res) => {
   `;
 
   await db.all(sql, [], (err, result) => {
-    // console.log("client says hi");
     if (err) throw err;
     else {
       const data = JSON.parse(JSON.stringify(result));
@@ -33,8 +34,5 @@ router.get("/", async (req, res) => {
     }
   });
 });
-
-
-
 
 module.exports = router;
