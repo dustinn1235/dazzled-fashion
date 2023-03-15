@@ -16,7 +16,7 @@ const ProductPage = () => {
   //   M: 2
   // }
   const fetchQty = async () => {
-    const URL = `http://localhost:5000/api/qty/${product.name}`;
+    const URL = `http://localhost:80/api/qty/${product.name}`;
     const res = await fetch(URL);
     const qty = await res.json();
     setQty(qty);
