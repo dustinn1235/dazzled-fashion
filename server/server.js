@@ -27,11 +27,8 @@ app.use("/api/items", require("./routes/itemsRoute"));
 app.use("/api/addOrder", require("./routes/ordersRoute"));
 app.use("/api/qty", require("./routes/qtyRoute"));
 
-// app.listen(port, () => console.log("Server Started on port " + port));
-
-
-app.listen(port, err => {
-  err ?
-  console.log("Failed to listen on PORT " + port) :
-  console.log("Application Server listening on PORT " + port);
+app.listen(port, (err) => {
+  err
+    ? console.log("Failed to listen on PORT " + port)
+    : console.log("Application Server listening on PORT " + port);
 });

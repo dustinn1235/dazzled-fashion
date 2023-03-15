@@ -16,14 +16,14 @@ const bodyParser = require("body-parser");
  * @type {Server[]}
  */
 const servers = [
-	{ url: "http://localhost:5000", isHealthy: true },
-	{ url: "http://localhost:5001", isHealthy: true },
+  { url: "http://localhost:5000", isHealthy: true },
+  { url: "http://localhost:5001", isHealthy: true },
 ];
 
 let current = 0;
 
 const corsOptions = {
-	origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
+  origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
 };
 
 app.use(cors(corsOptions));
@@ -31,26 +31,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/lb-health-check", (req, res) => {
-	res.status(200).send("OK");
-  });
+  res.status(200).send("OK");
+});
 
 /**
  * Checks the health of a server and updates its health status.
  * @param {Server} server - The server to check.
  */
 const checkHealth = async (server) => {
-	try {
-		const response = await axios.get(
-			`${server.url}/health-check`
-		);
-		if (response.status === 200 && response.data === "OK") {
-			server.isHealthy = true;
-		} else {
-			server.isHealthy = false;
-		}
-	} catch (err) {
-		server.isHealthy = false;
-	}
+  try {
+    const response = await axios.get(`${server.url}/health-check`);
+    if (response.status === 200 && response.data === "OK") {
+      server.isHealthy = true;
+    } else {
+      server.isHealthy = false;
+    }
+  } catch (err) {
+    server.isHealthy = false;
+  }
 };
 
 /**
@@ -58,9 +56,9 @@ const checkHealth = async (server) => {
  * @param {number} interval - The interval between health checks in milliseconds.
  */
 const startHealthCheckInterval = (interval) => {
-	setInterval(() => {
-		servers.forEach((server) => checkHealth(server));
-	}, interval);
+  setInterval(() => {
+    servers.forEach((server) => checkHealth(server));
+  }, interval);
 };
 
 /**
@@ -68,13 +66,13 @@ const startHealthCheckInterval = (interval) => {
  * @returns {string|null} The URL of the next healthy server, or null if no healthy servers are available.
  */
 const getNextHealthyServer = () => {
-	for (let i = 0; i < servers.length; i++) {
-		current = (current + 1) % servers.length;
-		if (servers[current].isHealthy) {
-			return servers[current].url;
-		}
-	}
-	return null;
+  for (let i = 0; i < servers.length; i++) {
+    current = (current + 1) % servers.length;
+    if (servers[current].isHealthy) {
+      return servers[current].url;
+    }
+  }
+  return null;
 };
 
 /**
@@ -82,11 +80,11 @@ const getNextHealthyServer = () => {
  * @param {string} serverUrl - The URL of the server to check.
  */
 const checkServerHealth = async (serverUrl) => {
-	try {
-		await axios.get(`${serverUrl}/health-check`);
-	} catch (err) {
-		console.log(`Server ${serverUrl} is down`);
-	}
+  try {
+    await axios.get(`${serverUrl}/health-check`);
+  } catch (err) {
+    console.log(`Server ${serverUrl} is down`);
+  }
 };
 
 /**
@@ -94,23 +92,23 @@ const checkServerHealth = async (serverUrl) => {
  * @returns {boolean} True if all servers are down, false otherwise.
  */
 const allServersDown = () => {
-	return servers.every((server) => !server.isHealthy);
+  return servers.every((server) => !server.isHealthy);
 };
 
 /**
  * Performs health checks on all servers and logs their status.
  */
 const performHealthChecks = () => {
-	if (servers.every((server) => server.isHealthy)) {
-		console.log("All servers are running!");
-		return;
-	} else if (allServersDown()) {
-		console.log("All servers are down");
-	} else {
-		for (const server of servers) {
-			checkServerHealth(server.url);
-		}
-	}
+  if (servers.every((server) => server.isHealthy)) {
+    console.log("All servers are running!");
+    return;
+  } else if (allServersDown()) {
+    console.log("All servers are down");
+  } else {
+    for (const server of servers) {
+      checkServerHealth(server.url);
+    }
+  }
 };
 // Check the health of the servers every 1 second
 setInterval(performHealthChecks, 1000);
@@ -123,42 +121,43 @@ setInterval(performHealthChecks, 1000);
  * @param {Object} res - The response object.
  */
 const handler = async (req, res) => {
-	const { method, url, headers, body } = req;
-	const serverUrl = getNextHealthyServer();
+  const { method, url, headers, body } = req;
+  const serverUrl = getNextHealthyServer();
 
-    const clientIP = req.connection.remoteAddress || req.headers['x-forwarded-for'];
-    console.log(`Client ${clientIP} connected to load balancer`);
+  const clientIP =
+    req.connection.remoteAddress || req.headers["x-forwarded-for"];
+  console.log(`Client ${clientIP} connected to load balancer`);
 
-	if (!serverUrl) {
-		res.status(500).send("No healthy servers available");
-		return;
-	}
-	console.log(`Client ${clientIP} requesting: ` + url);
+  if (!serverUrl) {
+    res.status(500).send("No healthy servers available");
+    return;
+  }
+  console.log(`Client ${clientIP} requesting: ` + url);
 
-	try {
-		const response = await axios({
-			url: `${serverUrl}${url}`,
-			method: method,
-			headers: headers,
-			data: body,
-		});
-		res.send(response.data);
-	} catch (err) {
-		console.log("Error forwarding request to server: " + serverUrl + url);
-		res.status(500).send("Server error");
-	}
+  try {
+    const response = await axios({
+      url: `${serverUrl}${url}`,
+      method: method,
+      headers: headers,
+      data: body,
+    });
+    res.send(response.data);
+  } catch (err) {
+    console.log("Error forwarding request to server: " + serverUrl + url);
+    res.status(500).send("Server error");
+  }
 };
 
 // Middleware for handling requests
 app.use((req, res) => {
-	handler(req, res);
+  handler(req, res);
 });
 
 // Start the load balancer server
 app.listen(80, (err) => {
-	err
-		? console.log("Failed to listen on PORT 80")
-		: console.log("Load Balancer Server Listening on PORT 80");
+  err
+    ? console.log("Failed to listen on PORT 80")
+    : console.log("Load Balancer Server Listening on PORT 80");
 });
 
 // Start the health check interval
