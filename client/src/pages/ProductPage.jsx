@@ -20,7 +20,6 @@ const ProductPage = () => {
   const fetchQty = async () => {
     try {
       const url = `/api/qty/${product.name}`;
-      console.log("fetching qty" + url);
       const res = await fetchWithLoadBalancerHealthCheck(url);
       const qty = await res.json();
       setQty(qty);
