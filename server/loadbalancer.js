@@ -147,7 +147,7 @@ const handler = async (req, res) => {
       headers: headers,
       data: body,
     });
-    res.send(response.data);
+    res.status(response.status).send(response.data);
   } catch (err) {
     console.log("Error forwarding request to server: " + serverUrl + url);
     res.status(500).send("Server error");

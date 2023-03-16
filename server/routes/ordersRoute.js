@@ -125,7 +125,7 @@ router.post("/", async (req, res) => {
   if (Object.keys(outOfStockItems).length > 0) {
     console.log("out of stock items below");
     console.log(outOfStockItems);
-    res.status(400).json(outOfStockItems);
+    res.status(269).json(outOfStockItems);
 
     // if all items are available
   } else {
