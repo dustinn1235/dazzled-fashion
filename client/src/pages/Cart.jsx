@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import Modal from "../components/Modal";
 import { useCart, useCartUpdate } from "../utils/CartContext";
-import {fetchWithLoadBalancerHealthCheck, loadBalancerHealthCheck} from "../utils/loadBalancerUtils";
-
+import { useLB } from "../utils/LoadBalancerContext";
 
 const Cart = () => {
   const { cart } = useCart();
@@ -16,6 +15,7 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(false);
   // use to display confirmation message
   const [isFetchSuccess, setIsFetchSuccess] = useState(false);
+  const { lbHealthCheck } = useLB();
 
   // calculate sub total of current
   const calculateTotal = () => {
@@ -31,8 +31,10 @@ const Cart = () => {
     // show message modal
     setShowModal(!showModal);
     setIsLoading(true);
-    const URL = "/api/addOrder";
-    const res = await fetchWithLoadBalancerHealthCheck(URL, {
+
+    const curLB = await lbHealthCheck();
+    const URL = `${curLB}/api/addOrder`;
+    const res = await fetch(URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +42,7 @@ const Cart = () => {
       body: JSON.stringify(data),
     });
     setTimeout(() => setIsLoading(false), 200);
-  
+
     // if not enough in stock
     if (res.status !== 200) {
       // update cart qty
@@ -77,14 +79,6 @@ const Cart = () => {
     }
     sendOrder(obj);
   };
-
-  useEffect(() => {
-    const healthCheckInterval = setInterval(loadBalancerHealthCheck, 3000); // Check every 5 seconds
-
-    return () => {
-      clearInterval(healthCheckInterval);
-    };
-  }, []);
 
   return (
     <div className="w-full md:max-w-[90%] lg:max-w-[min(80%,60rem)]">

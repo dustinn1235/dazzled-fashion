@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Products from "../components/Products";
-import {fetchWithLoadBalancerHealthCheck, loadBalancerHealthCheck} from "../utils/loadBalancerUtils";
-
+import { useLB } from "../utils/LoadBalancerContext";
 
 const Shop = () => {
   const [items, setItems] = useState([]);
+
+  const { lbHealthCheck } = useLB();
   const fetchItemsData = async () => {
     try {
-      const res = await fetchWithLoadBalancerHealthCheck("/api/items");
+      const curLB = await lbHealthCheck();
+      const url = `${curLB}/api/items`;
+      const res = await fetch(url);
       const items = await res.json();
       setItems(items);
     } catch (error) {
@@ -17,11 +20,6 @@ const Shop = () => {
 
   useEffect(() => {
     fetchItemsData();
-    const healthCheckInterval = setInterval(loadBalancerHealthCheck, 3000); // Check every 5 seconds
-
-    return () => {
-      clearInterval(healthCheckInterval);
-    };
   }, []);
 
   return (

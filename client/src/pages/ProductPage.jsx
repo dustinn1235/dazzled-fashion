@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Carousel from "../components/Carousel";
 import { useCartUpdate } from "../utils/CartContext";
-import {fetchWithLoadBalancerHealthCheck, loadBalancerHealthCheck} from "../utils/loadBalancerUtils";
-
+import { useLB } from "../utils/LoadBalancerContext";
 
 const ProductPage = () => {
   const location = useLocation();
@@ -11,6 +10,7 @@ const ProductPage = () => {
   const [qty, setQty] = useState({});
   // use to set disable add to bag button when item is out of stock
   const [disabled, setDisabled] = useState(false);
+  const { lbHealthCheck } = useLB();
 
   // fetch the qty of the item. Example response
   // {
@@ -19,8 +19,9 @@ const ProductPage = () => {
   // }
   const fetchQty = async () => {
     try {
-      const url = `/api/qty/${product.name}`;
-      const res = await fetchWithLoadBalancerHealthCheck(url);
+      const curLB = await lbHealthCheck();
+      const url = `${curLB}/api/qty/${product.name}`;
+      const res = await fetch(url);
       const qty = await res.json();
       setQty(qty);
     } catch (error) {
@@ -47,10 +48,6 @@ const ProductPage = () => {
   useEffect(() => {
     const value = sizeInput.current.value[0];
     qty[value] === 0 ? setDisabled(true) : setDisabled(false);
-    const healthCheckInterval = setInterval(loadBalancerHealthCheck, 3000); // Check every 5 seconds
-    return () => {
-      clearInterval(healthCheckInterval);
-    };
   }, [sizeInput.current?.value]);
 
   return (
