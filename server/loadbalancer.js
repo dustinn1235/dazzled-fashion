@@ -29,6 +29,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// remove caching to prevent 304 from fetch
+app.set("etag", false);
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
 
 app.get("/lb-health-check", (req, res) => {
   res.status(200).send("OK");
@@ -110,8 +116,8 @@ const performHealthChecks = () => {
     }
   }
 };
-// Check the health of the servers every 1 second
-setInterval(performHealthChecks, 1000);
+// // Check the health of the servers every 1 second
+// setInterval(performHealthChecks, 1000);
 
 /**
  * Handles incoming requests and forwards them to a healthy server.
@@ -154,10 +160,11 @@ app.use((req, res) => {
 });
 
 // Start the load balancer server
-app.listen(80, (err) => {
+const port = parseInt(process.argv[2]) || 4000;
+app.listen(port, (err) => {
   err
-    ? console.log("Failed to listen on PORT 80")
-    : console.log("Load Balancer Server Listening on PORT 80");
+    ? console.log("Failed to listen on PORT " + port)
+    : console.log("Load Balancer Server Listening on PORT " + port);
 });
 
 // Start the health check interval
