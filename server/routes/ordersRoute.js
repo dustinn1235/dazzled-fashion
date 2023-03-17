@@ -46,7 +46,12 @@ const validateData = (req) => {
 
 // check if items are available
 router.post("/", async (req, res) => {
-  // TODO add data validation
+  console.log(
+    "Client has requested orders \n /api/items from: ",
+    req.headers.referer
+  );
+
+  // Data validation
   if (!validateData(req)) res.status(418).send({ message: "Invalid data!" });
   // arrray to store items that are out of stock
   const outOfStockItems = {};
@@ -120,7 +125,7 @@ router.post("/", async (req, res) => {
   if (Object.keys(outOfStockItems).length > 0) {
     console.log("out of stock items below");
     console.log(outOfStockItems);
-    res.status(400).json(outOfStockItems);
+    res.status(269).json(outOfStockItems);
 
     // if all items are available
   } else {

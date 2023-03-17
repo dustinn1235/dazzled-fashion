@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Carousel from "../components/Carousel";
 import { useCartUpdate } from "../utils/CartContext";
+import { useLB } from "../utils/LoadBalancerContext";
 
 const ProductPage = () => {
   const location = useLocation();
@@ -9,6 +10,7 @@ const ProductPage = () => {
   const [qty, setQty] = useState({});
   // use to set disable add to bag button when item is out of stock
   const [disabled, setDisabled] = useState(false);
+  const { lbHealthCheck } = useLB();
 
   // fetch the qty of the item. Example response
   // {
@@ -16,10 +18,15 @@ const ProductPage = () => {
   //   M: 2
   // }
   const fetchQty = async () => {
-    const URL = `http://localhost:5000/api/qty/${product.name}`;
-    const res = await fetch(URL);
-    const qty = await res.json();
-    setQty(qty);
+    try {
+      const curLB = await lbHealthCheck();
+      const url = `${curLB}/api/qty/${product.name}`;
+      const res = await fetch(url);
+      const qty = await res.json();
+      setQty(qty);
+    } catch (error) {
+      console.error("Error fetching quantity data:", error.message);
+    }
   };
 
   // Get update function

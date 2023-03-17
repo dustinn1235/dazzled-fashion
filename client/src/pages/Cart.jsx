@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import Modal from "../components/Modal";
 import { useCart, useCartUpdate } from "../utils/CartContext";
+import { useLB } from "../utils/LoadBalancerContext";
 
 const Cart = () => {
   const { cart } = useCart();
@@ -14,6 +15,7 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(false);
   // use to display confirmation message
   const [isFetchSuccess, setIsFetchSuccess] = useState(false);
+  const { lbHealthCheck } = useLB();
 
   // calculate sub total of current
   const calculateTotal = () => {
@@ -29,9 +31,11 @@ const Cart = () => {
     // show message modal
     setShowModal(!showModal);
     setIsLoading(true);
-    const URL = "http://localhost:5000/api/addOrder";
+
+    const curLB = await lbHealthCheck();
+    const URL = `${curLB}/api/addOrder`;
     const res = await fetch(URL, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },

@@ -4,6 +4,11 @@ const db = require("../connect");
 
 // get all items
 router.get("/", async (req, res) => {
+  console.log(
+    "Client has requested to view all items \n /api/items from: ",
+    req.headers.referer
+  );
+
   let sql = `
   SELECT
     items.name AS name,

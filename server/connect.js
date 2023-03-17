@@ -20,13 +20,9 @@ const connectDB = (port) => {
   );
 
   // clone the db
-  fs.open(dbFile, (err) => {
-    if (err) {
-      fs.copyFile("./db/dazzleDB.db", `${dbFile}`, (err) => {
-        if (err) throw err;
-        console.log("Database replicated");
-      });
-    }
+  fs.copyFile("./db/dazzleDB.db", `${dbFile}`, (err) => {
+    if (err) throw err;
+    console.log("Database replicated");
   });
 
   module.exports = db;
