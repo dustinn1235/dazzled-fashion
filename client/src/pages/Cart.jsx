@@ -111,6 +111,7 @@ const Cart = () => {
             >
               CHECK OUT
             </button>
+            <Link to={`/checkout`}>TEST</Link>
           </div>
         </div>
       )}
