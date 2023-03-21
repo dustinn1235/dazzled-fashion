@@ -18,6 +18,7 @@ const bodyParser = require("body-parser");
 const servers = [
   { url: "http://localhost:5000", isHealthy: true },
   { url: "http://localhost:5001", isHealthy: true },
+  { url: "http://localhost:5002", isHealthy: true },
 ];
 
 let current = 0;

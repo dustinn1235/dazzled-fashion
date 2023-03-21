@@ -86,7 +86,7 @@ router.post("/", async (req, res) => {
             // if the qty of the item is greater than or equal to the qty in the request body
             if (results[0].qty >= item.qty) {
               // publish action to other servers
-              dem.publish("global", `Update item:${name} by ${-qty}`);
+              // dem.publish("global", `Update item:${name} by ${-qty}`)
 
               console.log("item is available");
               let update = `
@@ -98,6 +98,8 @@ router.post("/", async (req, res) => {
                   WHERE name = '${name}'
                 ) AND size = '${size}';
               `;
+
+              dem.publish("global", update);
 
               db.run(update, (err, result) => {
                 if (err) throw err;
