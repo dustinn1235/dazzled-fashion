@@ -4,13 +4,9 @@ const fs = require("fs");
 
 // this function is used to connect to the approriate database
 const connectDB = (port) => {
-  // connect to db file based on port
+  // connect to db file based on port. rep name based on last digit of port. 5000 => rep0.db
   const dbFile =
-    port === 5000
-      ? "./db/rep1.db"
-      : port === 5001
-      ? "./db/rep2.db"
-      : "./db/rep3.db";
+    port === "main" ? "./db/main.db" : `./db/rep${port.slice(-1)}.db`;
 
   const db = new sqlite3.Database(
     dbFile,
@@ -20,17 +16,19 @@ const connectDB = (port) => {
         console.error(err.message);
         throw err;
       }
-      console.log("Connected to the database.");
+      console.log(`Connected to the ${dbFile}`);
     }
   );
 
   // clone the db
-  fs.copyFile("./db/dazzleDB.db", `${dbFile}`, (err) => {
-    if (err) throw err;
-    console.log("Database replicated");
-  });
+  if (port !== "main") {
+    fs.copyFile("./db/main.db", `${dbFile}`, (err) => {
+      if (err) throw err;
+      console.log("Database replicated");
+    });
+  }
 
-  module.exports = db;
+  exports.db = db;
 };
 
-module.exports = connectDB;
+exports.connectDB = connectDB;

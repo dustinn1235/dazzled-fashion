@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../connect");
 const { dem } = require("../communicate");
 
 const validateData = (req) => {
@@ -71,7 +70,9 @@ router.post("/", async (req, res) => {
         WHERE name = '${item.name}'
       ) AND size = '${item.size}';
     `;
+
     // wait for the query to finish
+    const { db } = require("../connect");
     await new Promise((resolve, reject) => {
       db.all(sql, (error, results) => {
         if (error) {
