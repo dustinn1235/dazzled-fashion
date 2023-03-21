@@ -9,18 +9,15 @@ const setUpSubscribe = (port) => {
   });
 
   dem.subscribe("global");
-    dem.on("global", (msg) => {
-      console.log("Sync");
-      new Promise((resolve, reject) => {
-        db.run(msg, (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        });
-      }).catch((err) => console.log(err));
+  dem.on("global", (msg) => {
+    console.log("Sync");
+    new Promise((resolve, reject) => {
+      db.run(msg, (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    }).catch((err) => console.log(err));
   });
-  // dem.on("global", (msg) => {
-  //   console.log(msg);
-  // });
   exports.dem = dem;
 };
 exports.setUpSubscribe = setUpSubscribe;

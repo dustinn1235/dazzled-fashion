@@ -5,8 +5,12 @@ const fs = require("fs");
 // this function is used to connect to the approriate database
 const connectDB = (port) => {
   // connect to db file based on port
-  const dbFile = port === 5000 ? "./db/rep1.db" : port === 5001 ? "./db/rep2.db" : "./db/rep3.db";
-
+  const dbFile =
+    port === 5000
+      ? "./db/rep1.db"
+      : port === 5001
+      ? "./db/rep2.db"
+      : "./db/rep3.db";
 
   const db = new sqlite3.Database(
     dbFile,
