@@ -16,9 +16,6 @@ app.use(express.json());
 // set up communication
 const { setUpSubscribe } = require("./communicate");
 setUpSubscribe(port);
-// make db connection based on port number
-const { connectDB } = require("./connect");
-connectDB(port);
 
 app.get("/health-check", (req, res) => {
   res.status(200).send("OK");

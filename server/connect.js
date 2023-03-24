@@ -2,12 +2,15 @@
 const sqlite3 = require("sqlite3").verbose();
 const fs = require("fs");
 
-// this function is used to connect to the approriate database
-const connectDB = (port) => {
-  // connect to db file based on port. rep name based on last digit of port. 5000 => rep0.db
-  const dbFile =
-    port === "main" ? "./db/main.db" : `./db/rep${port.slice(-1)}.db`;
+// Define a function called "connectDB" that takes two parameters: port and leaderDB
+// Port is used to determine the database file to connect to, while leaderDB specifies the
+const connectDB = (port, leaderDB) => {
+  // The database file name is generated based on the port number provided to the function.
+  // The last digit of the port number is used to generate the database file name.
+  const dbFile = `./db/rep${port.slice(-1)}.db`;
 
+  // Connect to the database file using the sqlite3 module's Database() method.
+  // The method takes in the database file path, and the read and write flags for opening the
   const db = new sqlite3.Database(
     dbFile,
     sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
@@ -20,11 +23,12 @@ const connectDB = (port) => {
     }
   );
 
-  // clone the db
-  if (port !== "main") {
-    fs.copyFile("./db/main.db", `${dbFile}`, (err) => {
+  // If the database file generated from the port number is not the same as the leaderDB,
+  // then the database is cloned from the leaderDB using the copyFile() method from the fs
+  if (dbFile !== leaderDB) {
+    fs.copyFile(`${leaderDB}`, `${dbFile}`, (err) => {
       if (err) throw err;
-      console.log("Database replicated");
+      console.log(`Database replicated from ${leaderDB}`);
     });
   }
 
