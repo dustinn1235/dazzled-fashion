@@ -1,6 +1,6 @@
 const express = require("express");
 // take port from cmd line
-const port = process.argv[2] || 5000;
+const port = process.argv[2] || "5000";
 const cors = require("cors");
 require("dotenv").config();
 
@@ -12,9 +12,7 @@ const corsOptions = {
 const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
-const connectDB = require("./connect");
-// make db connection based on port number
-connectDB(parseInt(port));
+
 // set up communication
 const { setUpSubscribe } = require("./communicate");
 setUpSubscribe(port);

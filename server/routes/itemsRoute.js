@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../connect");
 
 // get all items
 router.get("/", async (req, res) => {
@@ -20,6 +19,7 @@ router.get("/", async (req, res) => {
   GROUP BY items.id;
   `;
 
+  const { db } = require("../connect");
   await db.all(sql, [], (err, result) => {
     if (err) throw err;
     else {

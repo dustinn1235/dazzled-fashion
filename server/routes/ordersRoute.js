@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../connect");
 const { dem } = require("../communicate");
 
 const validateData = (req) => {
@@ -71,7 +70,9 @@ router.post("/", async (req, res) => {
         WHERE name = '${item.name}'
       ) AND size = '${item.size}';
     `;
+
     // wait for the query to finish
+    const { db } = require("../connect");
     await new Promise((resolve, reject) => {
       db.all(sql, (error, results) => {
         if (error) {
@@ -85,9 +86,6 @@ router.post("/", async (req, res) => {
 
             // if the qty of the item is greater than or equal to the qty in the request body
             if (results[0].qty >= item.qty) {
-              // publish action to other servers
-              dem.publish("global", `Update item:${name} by ${-qty}`);
-
               console.log("item is available");
               let update = `
                 UPDATE item_sizes
@@ -98,6 +96,9 @@ router.post("/", async (req, res) => {
                   WHERE name = '${name}'
                 ) AND size = '${size}';
               `;
+
+              // publish action to other servers
+              dem.publish("global", update);
 
               db.run(update, (err, result) => {
                 if (err) throw err;
