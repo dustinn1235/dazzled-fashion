@@ -51,12 +51,7 @@ const Cart = () => {
               <p className="font-semibold">Subtotal</p>
               <p className="ml-auto font-semibold">${total.toFixed(2)}</p>
             </div>
-            {/* <button
-              className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold"
-              onClick={handleOrderSubmit}
-            >
-              CHECK OUT
-            </button> */}
+
             <Link to="/checkout">
               <button
                 className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold"
