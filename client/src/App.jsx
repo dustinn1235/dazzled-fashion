@@ -27,7 +27,7 @@ function App() {
     <LBProvider>
       <CartProvider>
         <StockProvider>
-          <div className="w-screen px-4 py-10 lg:px-6 flex flex-col items-center font-montserrat overflow-x-hidden cursor-crosshair">
+          <div className="w-full px-4 py-10 lg:px-6 flex flex-col items-center font-montserrat overflow-x-hidden cursor-crosshair">
             <Header />
             <Routes>
               <Route path="/" element={<Shop />} />

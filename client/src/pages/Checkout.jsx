@@ -42,7 +42,10 @@ const Checkout = () => {
         >
           <div className="grid gap-4 my-4 flex-1 overflow-auto">
             {itemArr.map((e) => (
-              <div className="w-full flex gap-4 items-center px-2" key={e}>
+              <div
+                className="w-full flex gap-4 items-center px-2 h-fit"
+                key={e}
+              >
                 <div className="w-[25%] md:w-[20%] aspect-square rounded-md border-2 flex justify-center relative">
                   <img
                     src={cart.get(e).imgURL[0]}
