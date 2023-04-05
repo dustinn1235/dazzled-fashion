@@ -5,6 +5,7 @@ import Modal from "../components/Modal";
 import { useCart, useCartUpdate } from "../utils/CartContext";
 import { useLB } from "../utils/LoadBalancerContext";
 
+
 const Cart = () => {
   const { cart } = useCart();
   const { changeQty, resetCart } = useCartUpdate();
@@ -111,7 +112,7 @@ const Cart = () => {
             >
               CHECK OUT
             </button>
-            <Link to={`/checkout`}>TEST</Link>
+            <Link to="/checkout" className="mt-3 block text-center text-gray-500 hover:text-black">CHECKOUT FORM</Link>
           </div>
         </div>
       )}
