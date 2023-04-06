@@ -62,11 +62,13 @@ import Modal from "../components/Modal";
       } else {
         setIsFetchSuccess(true);
         resetCart();
+        window.location.href = "/Thankyou";
         console.log("Success");
       }
     };
   
     const handleOrderSubmit = () => {
+    
       const obj = {};
       obj.userName = "test_user";
       obj.subTotal = total;
