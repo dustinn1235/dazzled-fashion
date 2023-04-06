@@ -62,8 +62,8 @@ import Modal from "../components/Modal";
       } else {
         setIsFetchSuccess(true);
         resetCart();
-        window.location.href = "/Thankyou";
         console.log("Success");
+        window.location.href = "/Thankyou";
       }
     };
   
@@ -177,7 +177,7 @@ import Modal from "../components/Modal";
             <div className="h-[1px] w-full bg-black"></div>
           </div>
 
-          <form className="mt-2 grid gap-y-4">
+          <div className="mt-2 grid gap-y-4">
             <div>
               <label>Email</label>
               <input className="w-full h-10 border-[#dadbdf] border-2 rounded-md px-3 mt-1 text-sm"></input>
@@ -190,7 +190,6 @@ import Modal from "../components/Modal";
               <label>Address</label>
               <input className="w-full h-10 border-[#dadbdf] border-2 rounded-md px-3 mt-1 text-sm"></input>
             </div>
-
             <div className="mt-2 grid grid-cols-[2fr,1fr] gap-x-4">
               <div>
                 <label>Card number</label>
@@ -221,11 +220,11 @@ import Modal from "../components/Modal";
               </div>
             </div>
             <button className="w-full bg-black text-white h-[2.5rem] mt-2 font-semibold" 
-               onClick={handleOrderSubmit}
+              onClick={handleOrderSubmit}
             >
               PLACE ORDER
             </button>
-          </form>
+          </div>
         </div>
       </div>
       <Modal
