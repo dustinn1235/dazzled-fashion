@@ -40,7 +40,7 @@ const setUpSubscribe = (app, port) => {
 
 	// Set up an interval to check the leader's status
 	setInterval(() => {
-		if (bully.leader === null || bully.state === "ELECTION") {
+		if (bully.leader === null || bully.isElectionInProgress) {
 			bully.startElection();
 		}
 	}, 1000);
@@ -69,7 +69,7 @@ const setUpSubscribe = (app, port) => {
 				bully.leader ? bully.leader : "unknown"
 			}`,
 			"\nalive peers:", bully.alivePeers
-			,"\nstate:", bully
+			// ,"\nstate:", bully
 			);
 	}, 1000);
 

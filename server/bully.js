@@ -9,8 +9,9 @@ class Bully extends EventEmitter {
 		this.leader = null;
 		this.alivePeers = {};
 		this.isElectionInProgress = false;
-		this.syncAlivePeers();
-		this.startElection();
+		this.syncAlivePeers().then(() => {
+			this.startElection();
+		});
 
 	}
 
@@ -63,9 +64,11 @@ class Bully extends EventEmitter {
 		// Inform other instances about the new leader
 		this.peers.forEach(async (peer) => {
 				try {
+					console.log("SUCCESSBUBBY")
 					await this.updateLeader(peer);
 					this.updatePeerStatus(peer, true);
 				} catch (error) {
+					console.log("FAILBUBBY")
 					this.updatePeerStatus(peer, false);
 				}
 		});
@@ -99,6 +102,7 @@ class Bully extends EventEmitter {
 					this.updatePeerStatus(peer, false);
 					reject(err);
 				} else {
+					this.updatePeerStatus(peer, true);
 					console.error("Missed error:", err);
 					reject(new Error("Unknown error occurred"));
 				}
@@ -124,6 +128,7 @@ class Bully extends EventEmitter {
 					this.updatePeerStatus(peer, true);
 					resolve();
 				} else {
+					this.updatePeerStatus(peer, false);
 					reject(new Error(`Non-200 status code: ${res.statusCode}`));
 				}
 			});
@@ -138,10 +143,10 @@ class Bully extends EventEmitter {
 					reject(err);
 				} else {
 					console.error("Missed error:", err);
+					this.updatePeerStatus(peer, true);
 					reject(new Error("Unknown error occurred"));
 				}
 			});
-			this.isElectionInProgress = false;
 			req.end();
 		});
 	}
@@ -162,6 +167,7 @@ class Bully extends EventEmitter {
 						this.updatePeerStatus(leaderId, true);
 						resolve();
 					} else {
+						this.updatePeerStatus(leaderId, false);
 						reject(new Error(`Non-200 status code: ${res.statusCode}`));
 					}
 				}
@@ -177,6 +183,7 @@ class Bully extends EventEmitter {
 					console.error("Failed to acknowledge leader:", err);
 					resolve(); // Resolve the promise to prevent the application from crashing
 				} else {
+					this.updatePeerStatus(leaderId, true);
 					reject(err);
 				}
 			});
@@ -208,6 +215,7 @@ class Bully extends EventEmitter {
 						resolve(alivePeers);
 					});
 				} else {
+					this.updatePeerStatus(peer, false);
 					reject(new Error(`Non-200 status code: ${res.statusCode}`));
 				}
 			});
@@ -221,6 +229,7 @@ class Bully extends EventEmitter {
 					this.updatePeerStatus(peer, false);
 					reject(err);
 				} else {
+					this.updatePeerStatus(peer, true);
 					console.error("Missed error:", err);
 					reject(new Error("Unknown error occurred"));
 				}
