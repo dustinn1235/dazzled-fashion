@@ -305,8 +305,58 @@ class Bully extends EventEmitter {
 			this.leader = foundLeader;
 		}
 	}
+
+	async broadcastMessage(msg) {
+		const sendPromises = Object.keys(this.alivePeers)
+		  .filter((peer) => this.alivePeers[peer] && peer !== this.id)
+		  .map((peer) => this.sendMessageToPeer(peer, msg));
+	  
+		await Promise.allSettled(sendPromises);
+	  }
 	
-	
+	  async sendMessageToPeer(peer, msg) {
+		return new Promise((resolve, reject) => {
+		  const requestOptions = {
+			method: "POST",
+			timeout: 1000,
+			hostname: "127.0.0.1",
+			port: peer,
+			path: "/broadcast",
+			headers: {
+			  "Content-Type": "application/json",
+			},
+		  };
+	  
+		  const req = http.request(requestOptions, (res) => {
+			if (res.statusCode === 200) {
+			  this.updatePeerStatus(peer, true);
+			  resolve();
+			} else {
+			  this.updatePeerStatus(peer, false);
+			  reject(new Error(`Non-200 status code: ${res.statusCode}`));
+			}
+		  });
+	  
+		  req.on("timeout", () => {
+			reject(new Error("Request timed out"));
+		  });
+	  
+		  req.on("error", (err) => {
+			if (err.code === "ECONNREFUSED") {
+			  this.updatePeerStatus(peer, false);
+			  reject(err);
+			} else {
+			  this.updatePeerStatus(peer, true);
+			  console.error("Missed error:", err);
+			  reject(new Error("Unknown error occurred"));
+			}
+		  });
+	  
+		  req.write(JSON.stringify({ msg }));
+		  req.end();
+		});
+	  }
+	  
 	
 }
 

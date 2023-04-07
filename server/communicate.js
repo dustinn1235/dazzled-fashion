@@ -44,6 +44,8 @@ const setUpSubscribe = (app, port) => {
 		);
 	});
 
+
+
 	// Set up an interval to check the leader's status
 	setInterval(() => {
 		bully.syncAlivePeers();
@@ -84,17 +86,25 @@ const setUpSubscribe = (app, port) => {
 	});
 
 	// Adding a listener for the 'message' event, which is emitted when a message is received from the leader
-	bully.on("message", (msg) => {
+	bully.on("message", async (msg) => {
 		const { db } = require("./connect");
 		console.log("Sync");
-		new Promise((resolve, reject) => {
+		try {
+			await new Promise((resolve, reject) => {
 			db.run(msg, (err, result) => {
 				if (err) reject(err);
 				resolve(result);
 			});
-		}).catch((err) => console.log(err));
+			});
+			await bully.broadcastMessage(msg);
+		} catch (err) {
+			console.log(err);
+		}
 	});
 	exports.bully = bully;
 };
+
+
+
 
 exports.setUpSubscribe = setUpSubscribe;
