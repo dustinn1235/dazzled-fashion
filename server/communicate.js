@@ -9,13 +9,13 @@ const setUpSubscribe = (app, port) => {
 
 	app.get("/alive-peers", (req, res) => {
 		res.status(200).json(bully.alivePeers);
-	});	
+	});
 
 	app.get("/update-leader/:leaderId", (req, res) => {
 		const leaderId = req.params.leaderId;
 		bully.leader = leaderId;
 		res.status(200).send();
-	});	
+	});
 
 	app.get("/election/:senderId", (req, res) => {
 		const senderId = req.params.senderId;
@@ -39,9 +39,10 @@ const setUpSubscribe = (app, port) => {
 	});
 
 	app.get("/current-leader", (req, res) => {
-		res.status(200).send(bully.leader ? bully.leader : "unknown");
+		res.status(200).send(
+			bully.leader ? bully.leader : "unknown"
+		);
 	});
-	
 
 	// Set up an interval to check the leader's status
 	setInterval(() => {
@@ -49,7 +50,6 @@ const setUpSubscribe = (app, port) => {
 		if (bully.leader === null || bully.isElectionInProgress) {
 			bully.startElection();
 		}
-		console.log("Current Leader is: ", bully.leader);
 	}, 1000);
 
 	// init connect
@@ -57,21 +57,23 @@ const setUpSubscribe = (app, port) => {
 	// get leader database
 	const waitForLeaderAndSync = (bully, port) => {
 		if (bully.leader !== null) {
-		  const leaderId = bully.leader.slice(-1);
-		  const leaderDB = `./db/rep${leaderId}.db`;
-		  connectDB(port, leaderDB);
+			const leaderId = bully.leader.slice(-1);
+			const leaderDB = `./db/rep${leaderId}.db`;
+			connectDB(port, leaderDB);
 		} else {
-		  setTimeout(() => waitForLeaderAndSync(bully, port), 500);
+			setTimeout(
+				() => waitForLeaderAndSync(bully, port),
+				500
+			);
 		}
-	  };
+	};
 
-	  waitForLeaderAndSync(bully, port);
-	  
+	waitForLeaderAndSync(bully, port);
 
 	// Adding a listener for the 'elected' event, which is emitted when this server is elected as the leader
 	// This will print a message to indicate that this server is the leader
 	bully.on("elected", () => {
-		console.log(`I (${bully.id}) am the captain!`);
+		console.log(`I am the captain!`);
 	});
 
 	bully.on("leader", (leaderId) => {

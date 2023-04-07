@@ -63,12 +63,11 @@ class Bully extends EventEmitter {
 	
 		// Inform other instances about the new leader
 		this.peers.forEach(async (peer) => {
-				try {
-					await this.updateLeader(peer);
-					this.updatePeerStatus(peer, true);
-				} catch (error) {
-					this.updatePeerStatus(peer, false);
-				}
+			try {
+				await this.updateLeader(peer);
+				
+			} catch (error) {
+			}
 		});
 	}
 	
@@ -87,6 +86,7 @@ class Bully extends EventEmitter {
 					this.updatePeerStatus(peer, true);
 					resolve();
 				} else {
+					this.updatePeerStatus(peer, false);
 					reject(new Error(`Non-200 status code: ${res.statusCode}`));
 				}
 			});
@@ -97,10 +97,8 @@ class Bully extends EventEmitter {
 	
 			req.on("error", (err) => {
 				if (err.code === 'ECONNREFUSED') {
-					this.updatePeerStatus(peer, false);
 					reject(err);
 				} else {
-					this.updatePeerStatus(peer, true);
 					console.error("Missed error:", err);
 					reject(new Error("Unknown error occurred"));
 				}
@@ -123,10 +121,8 @@ class Bully extends EventEmitter {
 	
 			const req = http.request(requestOptions, (res) => {
 				if (res.statusCode === 200) {
-					this.updatePeerStatus(peer, true);
 					resolve();
 				} else {
-					this.updatePeerStatus(peer, false);
 					reject(new Error(`Non-200 status code: ${res.statusCode}`));
 				}
 			});
@@ -137,11 +133,9 @@ class Bully extends EventEmitter {
 	
 			req.on("error", (err) => {
 				if (err.code === 'ECONNREFUSED') {
-					this.updatePeerStatus(peer, false);
 					reject(err);
 				} else {
 					console.error("Missed error:", err);
-					this.updatePeerStatus(peer, true);
 					reject(new Error("Unknown error occurred"));
 				}
 			});
@@ -162,6 +156,7 @@ class Bully extends EventEmitter {
 	
 			const req = http.request(requestOptions, (res) => {
 					if (res.statusCode === 200) {
+						
 						this.updatePeerStatus(leaderId, true);
 						resolve();
 					} else {
@@ -177,11 +172,9 @@ class Bully extends EventEmitter {
 	
 			req.on("error", (err) => {
 				if (err.code === 'ECONNREFUSED') {
-					this.updatePeerStatus(leaderId, false);
 					console.error("Failed to acknowledge leader:", err);
 					resolve(); // Resolve the promise to prevent the application from crashing
 				} else {
-					this.updatePeerStatus(leaderId, true);
 					reject(err);
 				}
 			});
@@ -224,10 +217,8 @@ class Bully extends EventEmitter {
 	
 			req.on("error", (err) => {
 				if (err.code === "ECONNREFUSED") {
-					this.updatePeerStatus(peer, false);
 					reject(err);
 				} else {
-					this.updatePeerStatus(peer, true);
 					console.error("Missed error:", err);
 					reject(new Error("Unknown error occurred"));
 				}
@@ -271,10 +262,8 @@ class Bully extends EventEmitter {
 	
 			req.on("error", (err) => {
 				if (err.code === "ECONNREFUSED") {
-					this.updatePeerStatus(peer, false);
 					reject(err);
 				} else {
-					this.updatePeerStatus(peer, true);
 					console.error("Missed error:", err);
 					reject(new Error("Unknown error occurred"));
 				}
@@ -304,7 +293,6 @@ class Bully extends EventEmitter {
 				try {
 					return await this.fetchLeader(peer);
 				} catch (err) {
-					this.updatePeerStatus(peer, false);
 					return "unknown";
 				}
 			});
