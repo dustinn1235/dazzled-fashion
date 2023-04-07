@@ -15,7 +15,7 @@ app.use(express.json());
 
 // set up communication
 const { setUpSubscribe } = require("./communicate");
-setUpSubscribe(port);
+setUpSubscribe(app, port);
 
 app.get("/health-check", (req, res) => {
   res.status(200).send("OK");

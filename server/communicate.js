@@ -1,47 +1,89 @@
-const Democracry = require("democracy");
+// const Democracry = require("democracy");
 const { connectDB } = require("./connect");
+const Bully = require("./bully");
 
 // A function used to set up a subscription to the global channel using the Democracy module
-const setUpSubscribe = (port) => {
-  const dem = new Democracry({
-    source: `0.0.0.0:${port}`,
-    peers: ["0.0.0.0:5000", "0.0.0.0:5001", "0.0.0.0:5002"],
-    id: `${port.slice(-1)}`,
-  });
+const setUpSubscribe = (app, port) => {
+	// Create a Bully instance for this server
+	const bully = new Bully(port, ["5000", "5001", "5002"]);
 
-  // init connect
-  let curConnection = `./db/rep${dem._id}.db`;
-  connectDB(port, `./db/rep${dem._id}.db`);
+	app.get("/alive-peers", (req, res) => {
+		res.status(200).json(bully.alivePeers);
+	});	
 
-  // Adding a listener for the 'added' event, which is emitted when a new server is added to the network
-  // If this server is the leader, do nothing. If there is no leader, copy from the baseline db.
-  // If this server is not the leader, clone from the appropriate leader db
-  dem.on("added", () => {
-    const leader = dem.leader();
-    if (leader !== null && leader.id !== dem._id)
-      if (curConnection !== `./db/rep${leader.id}.db`) {
-        connectDB(port, `./db/rep${leader.id}.db`);
-        curConnection = `./db/rep${leader.id}.db`;
-      }
-  });
+	app.get("/update-leader/:leaderId", (req, res) => {
+		const leaderId = req.params.leaderId;
+		bully.leader = leaderId;
+		res.status(200).send();
+	});	
 
-  // Adding a listener for the 'elected' event, which is emitted when this server is elected as the leader
-  // This will print a message to indicate that this server is the leader
-  dem.on("elected", () => console.log("I am the captain!"));
+	app.get("/election/:senderId", (req, res) => {
+		const senderId = req.params.senderId;
 
-  dem.subscribe("global");
-  // Adding a listener for the 'global' event, which is emitted when a message is received on the global channel
-  // The message contains a SQL query to be executed on the database
-  dem.on("global", (msg) => {
-    const { db } = require("./connect");
-    console.log("Sync");
-    new Promise((resolve, reject) => {
-      db.run(msg, (err, result) => {
-        if (err) reject(err);
-        resolve(result);
-      });
-    }).catch((err) => console.log(err));
-  });
-  exports.dem = dem;
+		if (bully.id < senderId && !bully.isElectionInProgress) {
+			bully.startElection();
+		}
+
+		res.status(200).send();
+	});
+
+	app.get("/leader/:leaderId", (req, res) => {
+		const leaderId = req.params.leaderId;
+
+		if (bully.id < leaderId) {
+			bully.emit("leader", leaderId);
+			bully.leader = leaderId;
+		}
+
+		res.status(200).send();
+	});
+
+	// Set up an interval to check the leader's status
+	setInterval(() => {
+		if (bully.leader === null || bully.state === "ELECTION") {
+			bully.startElection();
+		}
+	}, 1000);
+
+	// init connect
+	let curConnection = `./db/rep${bully.id}.db`;
+	connectDB(port, `./db/rep${bully.id.slice(-1)}.db`);
+
+	// Adding a listener for the 'elected' event, which is emitted when this server is elected as the leader
+	// This will print a message to indicate that this server is the leader
+	bully.on("elected", () => {
+		console.log(`I (${bully.id}) am the captain!`);
+	});
+
+	bully.on("leader", (leaderId) => {
+		console.log(
+			`I (${bully.id}) acknowledge ${leaderId} as the captain!`
+		);
+		bully.leader = leaderId;
+	});
+
+	setInterval(() => {
+		bully.syncAlivePeers();
+		console.log(
+			`Current leader: ${
+				bully.leader ? bully.leader : "unknown"
+			}`,
+			"\nalive peers:", bully.alivePeers
+			,"\nstate:", bully
+			);
+	}, 1000);
+
+	// Adding a listener for the 'message' event, which is emitted when a message is received from the leader
+	bully.on("message", (msg) => {
+		const { db } = require("./connect");
+		console.log("Sync");
+		new Promise((resolve, reject) => {
+			db.run(msg, (err, result) => {
+				if (err) reject(err);
+				resolve(result);
+			});
+		}).catch((err) => console.log(err));
+	});
 };
+
 exports.setUpSubscribe = setUpSubscribe;
