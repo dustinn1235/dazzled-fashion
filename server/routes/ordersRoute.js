@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { dem } = require("../communicate");
+const { bully } = require("../communicate");
 
 const validateData = (req) => {
   let total = 0;
@@ -98,7 +98,7 @@ router.post("/", async (req, res) => {
               `;
 
               // publish action to other servers
-              dem.publish("global", update);
+              bully.emit("message", update);
 
               db.run(update, (err, result) => {
                 if (err) throw err;

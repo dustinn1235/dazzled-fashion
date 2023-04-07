@@ -64,11 +64,9 @@ class Bully extends EventEmitter {
 		// Inform other instances about the new leader
 		this.peers.forEach(async (peer) => {
 				try {
-					console.log("SUCCESSBUBBY")
 					await this.updateLeader(peer);
 					this.updatePeerStatus(peer, true);
 				} catch (error) {
-					console.log("FAILBUBBY")
 					this.updatePeerStatus(peer, false);
 				}
 		});
@@ -239,22 +237,87 @@ class Bully extends EventEmitter {
 		});
 	}
 
+	async fetchLeader(peer) {
+		return new Promise((resolve, reject) => {
+			const requestOptions = {
+				method: "GET",
+				timeout: 1000,
+				hostname: "127.0.0.1",
+				port: peer,
+				path: "/current-leader",
+			};
+	
+			const req = http.request(requestOptions, (res) => {
+				if (res.statusCode === 200) {
+					this.updatePeerStatus(peer, true);
+					let data = "";
+					res.on("data", (chunk) => {
+						data += chunk;
+					});
+	
+					res.on("end", () => {
+						const leader = data;
+						resolve(leader);
+					});
+				} else {
+					this.updatePeerStatus(peer, false);
+					reject(new Error(`Non-200 status code: ${res.statusCode}`));
+				}
+			});
+	
+			req.on("timeout", () => {
+				reject(new Error("Request timed out"));
+			});
+	
+			req.on("error", (err) => {
+				if (err.code === "ECONNREFUSED") {
+					this.updatePeerStatus(peer, false);
+					reject(err);
+				} else {
+					this.updatePeerStatus(peer, true);
+					console.error("Missed error:", err);
+					reject(new Error("Unknown error occurred"));
+				}
+			});
+	
+			req.end();
+		});
+	}
+	
 	async syncAlivePeers() {
 		const fetchPeersPromises = this.peers
 			.filter((peer) => peer !== this.id)
-			.map((peer) => this.fetchAlivePeers(peer));
-	
-		try {
-			const allPeersAliveStatus = await Promise.all(fetchPeersPromises);
-			
-			allPeersAliveStatus.forEach((peersAliveStatus) => {
-				for (const [peer, isAlive] of Object.entries(peersAliveStatus)) {
-					this.updatePeerStatus(peer, isAlive);
+			.map(async (peer) => {
+				try {
+					const peersAliveStatus = await this.fetchAlivePeers(peer);
+					for (const [otherPeer, isAlive] of Object.entries(peersAliveStatus)) {
+						this.updatePeerStatus(otherPeer, isAlive);
+					}
+				} catch (err) {
+					this.updatePeerStatus(peer, false);
 				}
 			});
-		} catch (err) {
+	
+		const fetchLeadersPromises = this.peers
+			.filter((peer) => peer !== this.id)
+			.map(async (peer) => {
+				try {
+					return await this.fetchLeader(peer);
+				} catch (err) {
+					this.updatePeerStatus(peer, false);
+					return "unknown";
+				}
+			});
+	
+		await Promise.all(fetchPeersPromises);
+		const allLeaders = await Promise.all(fetchLeadersPromises);
+	
+		const foundLeader = allLeaders.find((leader) => leader !== "unknown" && leader !== this.id);
+		if (foundLeader) {
+			this.leader = foundLeader;
 		}
 	}
+	
 	
 	
 }
