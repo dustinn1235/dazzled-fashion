@@ -85,8 +85,10 @@ router.post("/", async (req, res) => {
             console.log(results); // print out the results
 
             // if the qty of the item is greater than or equal to the qty in the request body
+            // timestamp is date of query, update is the query
             if (results[0].qty >= item.qty) {
               console.log("item is available");
+              let timestamp = new Date().toLocaleString();
               let update = `
                 UPDATE item_sizes
                 SET qty = (qty - ${qty})
@@ -97,8 +99,12 @@ router.post("/", async (req, res) => {
                 ) AND size = '${size}';
               `;
 
+              // concatenate timestmap with the query.
+              let msg = `${timestamp}|${update}`;
+              console.log(timestamp);
+
               // publish action to other servers
-              dem.publish("global", update);
+              dem.publish("global", msg);
 
               db.run(update, (err, result) => {
                 if (err) throw err;

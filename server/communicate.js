@@ -34,9 +34,13 @@ const setUpSubscribe = (port) => {
   // The message contains a SQL query to be executed on the database
   dem.on("global", (msg) => {
     const { db } = require("./connect");
+
+    // split timestamp and query
+    const[timestamp,update] = msg.split("|");
+    console.log(timestamp);
     console.log("Sync");
     new Promise((resolve, reject) => {
-      db.run(msg, (err, result) => {
+      db.run(update, (err, result) => {
         if (err) reject(err);
         resolve(result);
       });
