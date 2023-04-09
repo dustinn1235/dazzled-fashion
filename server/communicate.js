@@ -37,7 +37,7 @@ const setUpSubscribe = (port) => {
 
     // split timestamp and query
     const[timestamp,update] = msg.split("|");
-    console.log(timestamp);
+    console.log(timestamp.toString());
     console.log("Sync");
     new Promise((resolve, reject) => {
       db.run(update, (err, result) => {
@@ -49,3 +49,5 @@ const setUpSubscribe = (port) => {
   exports.dem = dem;
 };
 exports.setUpSubscribe = setUpSubscribe;
+
+// Date comparison
