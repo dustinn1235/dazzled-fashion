@@ -86,7 +86,7 @@ router.post("/", async (req, res) => {
 
             // Increment logical clock for every request
             let timestamp = incrementClock();
-            console.log("ts is " + timestamp);
+            console.log("Logical Time is: " + timestamp);
 
             // if the qty of the item is greater than or equal to the qty in the request body
             // timestamp is date of query, update is the query
