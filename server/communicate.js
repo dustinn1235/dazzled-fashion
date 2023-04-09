@@ -6,14 +6,12 @@ let logicalTime = 0;
 // Increment logical clock
 function incrementClock() {
   logicalTime++;
-  console.log(logicalTime);
   return logicalTime;
 }
 
 // When new update arrives, update the clock based on the logical time from message and current
 function updateClock (timestamp) {
   logicalTime = Math.max(logicalTime, timestamp) + 1;
-  console.log(logicalTime);
   return logicalTime;
 }
 
@@ -67,7 +65,6 @@ const setUpSubscribe = (port) => {
 
         // Increment logical clock on successful query 
         updateClock(timestamp);
-
         console.log("Logical Time is: " + logicalTime);
       });
     }).catch((err) => console.log(err));
