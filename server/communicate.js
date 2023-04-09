@@ -13,21 +13,25 @@ const setUpSubscribe = (port) => {
   let curConnection = `./db/rep${dem._id}.db`;
   connectDB(port, `./db/rep${dem._id}.db`);
 
+  // keep track of active servers
+  const activeServers = new Set();
+
   // Adding a listener for the 'added' event, which is emitted when a new server is added to the network
-  // If this server is the leader, do nothing. If there is no leader, copy from the baseline db.
-  // If this server is not the leader, clone from the appropriate leader db
-  dem.on("added", () => {
-    const leader = dem.leader();
-    if (leader !== null && leader.id !== dem._id)
-      if (curConnection !== `./db/rep${leader.id}.db`) {
-        connectDB(port, `./db/rep${leader.id}.db`);
-        curConnection = `./db/rep${leader.id}.db`;
-      }
+  // updating the activeServers list when new server start
+  dem.on("added", (data) => {
+    activeServers.add(data.id);
+    console.log([...activeServers][0]);
+    firstAvailServer = [...activeServers][0];
+    if (curConnection !== `./db/rep${firstAvailServer}.db`) {
+      connectDB(port, `./db/rep${firstAvailServer}.db`);
+      curConnection = `./db/rep${firstAvailServer}.db`;
+    }
   });
 
-  // Adding a listener for the 'elected' event, which is emitted when this server is elected as the leader
-  // This will print a message to indicate that this server is the leader
-  dem.on("elected", () => console.log("I am the captain!"));
+  // updating the activeServers list when a server is down
+  dem.on("removed", (data) => {
+    activeServers.delete(data.id);
+  });
 
   dem.subscribe("global");
   // Adding a listener for the 'global' event, which is emitted when a message is received on the global channel
