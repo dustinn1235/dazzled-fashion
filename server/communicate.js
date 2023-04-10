@@ -10,28 +10,24 @@ const setUpSubscribe = (port) => {
   });
 
   // init connect
-  let curConnection = `./db/rep${dem._id}.db`;
   connectDB(port, `./db/rep${dem._id}.db`);
 
-  // keep track of active servers
-  const activeServers = new Set();
-
-  // Adding a listener for the 'added' event, which is emitted when a new server is added to the network
-  // updating the activeServers list when new server start
-  dem.on("added", (data) => {
-    activeServers.add(data.id);
-    console.log([...activeServers][0]);
-    firstAvailServer = [...activeServers][0];
-    if (curConnection !== `./db/rep${firstAvailServer}.db`) {
-      connectDB(port, `./db/rep${firstAvailServer}.db`);
-      curConnection = `./db/rep${firstAvailServer}.db`;
+  // on server start, it will send message to any of the alive servers.
+  // if any alive server response, it will replicate the response server
+  // firstConnection boolean is used to make sure it only replicate once
+  let firstConnection = true;
+  dem.on("replicate", ({ connect, origin }) => {
+    if (dem._id == origin) {
+      if (firstConnection) {
+        connectDB(port, `./db/rep${connect}.db`);
+        firstConnection = false;
+      }
     }
   });
-
-  // updating the activeServers list when a server is down
-  dem.on("removed", (data) => {
-    activeServers.delete(data.id);
-  });
+  dem.on("new", (data) =>
+    dem.send("replicate", { connect: dem._id, origin: data })
+  );
+  dem.send("new", dem._id);
 
   dem.subscribe("global");
   // Adding a listener for the 'global' event, which is emitted when a message is received on the global channel
