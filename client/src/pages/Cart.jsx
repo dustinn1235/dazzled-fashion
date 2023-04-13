@@ -5,6 +5,7 @@ import Modal from "../components/Modal";
 import { useCart, useCartUpdate } from "../utils/CartContext";
 import { useLB } from "../utils/LoadBalancerContext";
 
+
 const Cart = () => {
   const { cart } = useCart();
   const { changeQty, resetCart } = useCartUpdate();
@@ -105,13 +106,17 @@ const Cart = () => {
               <p className="font-semibold">Subtotal</p>
               <p className="ml-auto font-semibold">${total.toFixed(2)}</p>
             </div>
-            <button
+            {/* <button
               className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold"
               onClick={handleOrderSubmit}
             >
               CHECK OUT
+            </button> */}
+            <button className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold">
+              <Link to="/checkout" className="w-full h-full">
+                CHECKOUT 
+              </Link>
             </button>
-            <Link to={`/checkout`}>TEST</Link>
           </div>
         </div>
       )}
