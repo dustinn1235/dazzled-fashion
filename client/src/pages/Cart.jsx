@@ -7,6 +7,15 @@ const Cart = () => {
   const { cart } = useCart();
   const itemArr = Array.from(cart.keys());
 
+  // disable checkout button if any item is out of stock
+  let disableCheckout = false;
+  for (const [k, v] of cart) {
+    if (v.qty === 0) {
+      disableCheckout = true;
+      break;
+    }
+  }
+
   // calculate sub total of current
   const calculateTotal = () => {
     let total = 0;
@@ -49,7 +58,10 @@ const Cart = () => {
               CHECK OUT
             </button> */}
             <Link to="/checkout">
-              <button className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold">
+              <button
+                className="bg-black text-white w-full h-[2.5rem] mt-3 font-bold"
+                disabled={disableCheckout}
+              >
                 CHECKOUT
               </button>
             </Link>

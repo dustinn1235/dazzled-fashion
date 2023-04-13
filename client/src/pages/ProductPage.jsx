@@ -87,7 +87,7 @@ const ProductPage = () => {
           ADD TO CART
         </button>
         {/* testing */}
-        <p className="pt-6">{JSON.stringify(qty)}</p>
+        {/* <p className="pt-6">{JSON.stringify(qty)}</p> */}
       </div>
     </div>
   );

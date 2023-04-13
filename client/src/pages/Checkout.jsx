@@ -2,7 +2,7 @@ import PaypalLogo from "../assets/paypal.svg";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineDown } from "react-icons/ai";
 import { AiOutlineUp } from "react-icons/ai";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useCart, useCartUpdate } from "../utils/CartContext";
 import { useLB } from "../utils/LoadBalancerContext";
 import Modal from "../components/Modal";
