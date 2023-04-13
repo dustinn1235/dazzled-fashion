@@ -10,7 +10,7 @@ function incrementClock() {
 }
 
 // When new update arrives, update the clock based on the logical time from message and current
-function updateClock (timestamp) {
+function updateClock(timestamp) {
   logicalTime = Math.max(logicalTime, timestamp) + 1;
   return logicalTime;
 }
@@ -47,14 +47,13 @@ const setUpSubscribe = (port) => {
   // Adding a listener for the 'global' event, which is emitted when a message is received on the global channel
   // The message contains a SQL query to be executed on the database
 
-
   dem.on("global", (msg) => {
     const { db } = require("./connect");
 
     console.log("pp" + msg);
 
     // split timestamp and query m
-    const[timestamp,update] = msg.split("|");
+    const [timestamp, update] = msg.split("|");
     // console.log(timestamp.toString());
 
     console.log("Sync");
@@ -63,7 +62,7 @@ const setUpSubscribe = (port) => {
         if (err) reject(err);
         resolve(result);
 
-        // Increment logical clock on successful query 
+        // Increment logical clock on successful query
         updateClock(timestamp);
         console.log("Logical Time is: " + logicalTime);
       });

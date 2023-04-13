@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { dem, incrementClock, updateClock, logicalTime } = require("../communicate");
+const {
+  dem,
+  incrementClock,
+  updateClock,
+  logicalTime,
+} = require("../communicate");
 
 const validateData = (req) => {
   let total = 0;
