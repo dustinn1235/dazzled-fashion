@@ -56,7 +56,11 @@ router.post("/", async (req, res) => {
   );
 
   // Data validation
-  if (!validateData(req)) res.status(418).send({ message: "Invalid data!" });
+  if (!validateData(req)) {
+    res.status(418).send({ message: "Invalid data!" });
+    return;
+  }
+
   // arrray to store items that are out of stock
   const outOfStockItems = {};
 
