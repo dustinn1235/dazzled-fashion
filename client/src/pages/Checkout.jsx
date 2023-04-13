@@ -101,7 +101,7 @@ const Checkout = () => {
                 className="w-full flex gap-4 items-center px-2 h-fit"
                 key={e}
               >
-                <div className="w-[25%] md:w-[20%] aspect-square rounded-md border-2 flex justify-center relative">
+                <div className="w-[25%] md:w-[20%] aspect-square rounded-md border-2 flex justify-center relative h-fit">
                   <img
                     src={cart.get(e).imgURL[0]}
                     className="max-h-full object-contain "
@@ -171,7 +171,7 @@ const Checkout = () => {
               <label>Address</label>
               <input className="w-full h-10 border-[#dadbdf] border-2 rounded-md px-3 mt-1 text-sm"></input>
             </div>
-            <div className="mt-2 grid grid-cols-[2fr,1fr] gap-x-4">
+            <div className="mt-2 grid grid-cols-[1.5fr,1fr] gap-x-4">
               <div>
                 <label>Card number</label>
                 <input
@@ -187,7 +187,7 @@ const Checkout = () => {
                 ></input>
               </div>
             </div>
-            <div className="grid grid-cols-[2fr,1fr] gap-x-4">
+            <div className="grid grid-cols-[1.5fr,1fr] gap-x-4">
               <div>
                 <label>Cardholder's name</label>
                 <input className="w-full h-10 border-[#dadbdf] border-2 rounded-md px-3 mt-1"></input>

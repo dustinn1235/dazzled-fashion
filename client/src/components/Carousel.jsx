@@ -27,7 +27,7 @@ const Carousel = ({ product }) => {
         {...swipeHandlers}
       >
         {imgs.map((e) => (
-          <div className="min-w-full flex justify-center" key={e}>
+          <div className="min-w-full flex justify-center max-h-full" key={e}>
             <img
               src={e}
               className="max-w-[70%] max-h-full object-contain"
