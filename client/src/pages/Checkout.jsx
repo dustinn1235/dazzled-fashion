@@ -17,15 +17,10 @@ const Checkout = () => {
   const [isFetchSuccess, setIsFetchSuccess] = useState(false);
   const { lbHealthCheck } = useLB();
 
-  const calculateTotal = () => {
-    let total = 0;
-    for (const [_, value] of cart) {
-      total += value.price * value.qty;
-    }
-    return total;
-  };
-
-  const total = useMemo(() => calculateTotal(), [cart]);
+  let total = 0;
+  itemArr.map((e) => {
+    total += cart.get(e).qty * cart.get(e).price;
+  });
 
   const sendOrder = async (data) => {
     setShowModal(!showModal);
