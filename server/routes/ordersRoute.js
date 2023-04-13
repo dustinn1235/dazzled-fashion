@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { dem } = require("../communicate");
+const { dem, incrementClock, updateClock, logicalTime } = require("../communicate");
 
 const validateData = (req) => {
   let total = 0;
@@ -84,7 +84,12 @@ router.post("/", async (req, res) => {
             console.log("item found and no error!");
             console.log(results); // print out the results
 
+            // Increment logical clock for every request
+            let timestamp = incrementClock();
+            console.log("Logical Time is: " + timestamp);
+
             // if the qty of the item is greater than or equal to the qty in the request body
+            // timestamp is date of query, update is the query
             if (results[0].qty >= item.qty) {
               console.log("item is available");
               let update = `
@@ -97,8 +102,11 @@ router.post("/", async (req, res) => {
                 ) AND size = '${size}';
               `;
 
+              // concatenate timestmap with the query.
+              let msg = `${timestamp}|${update}`;
+
               // publish action to other servers
-              dem.publish("global", update);
+              dem.publish("global", msg);
 
               db.run(update, (err, result) => {
                 if (err) throw err;
