@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
 const Modal = ({ hidden, setHidden, isLoading, isFetchSuccess }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`w-full h-full fixed top-0 left-0 flex justify-center items-center ${
@@ -7,7 +10,12 @@ const Modal = ({ hidden, setHidden, isLoading, isFetchSuccess }) => {
     >
       <div
         className="w-full h-full fixed top-0 left-0 bg-white opacity-80"
-        onClick={() => !isLoading && setHidden(!hidden)}
+        onClick={() => {
+          if (!isLoading) {
+            setHidden(!hidden);
+            navigate("/cart");
+          }
+        }}
       ></div>
       {!isLoading ? (
         <div className="w-[75%] max-w-[30rem] aspect-[2/1] bg-black fixed rounded-lg flex flex-col justify-center items-center text-white opacity-90 font-bold">

@@ -1,6 +1,20 @@
 const Democracry = require("democracy");
 const { connectDB } = require("./connect");
 
+let logicalTime = 0;
+
+// Increment logical clock
+function incrementClock() {
+  logicalTime++;
+  return logicalTime;
+}
+
+// When new update arrives, update the clock based on the logical time from message and current
+function updateClock(timestamp) {
+  logicalTime = Math.max(logicalTime, timestamp) + 1;
+  return logicalTime;
+}
+
 // A function used to set up a subscription to the global channel using the Democracy module
 const setUpSubscribe = (port) => {
   const dem = new Democracry({
@@ -32,16 +46,29 @@ const setUpSubscribe = (port) => {
   dem.subscribe("global");
   // Adding a listener for the 'global' event, which is emitted when a message is received on the global channel
   // The message contains a SQL query to be executed on the database
+
   dem.on("global", (msg) => {
     const { db } = require("./connect");
+
+    // split timestamp and query m
+    const [timestamp, update] = msg.split("|");
+    // console.log(timestamp.toString());
+
     console.log("Sync");
     new Promise((resolve, reject) => {
-      db.run(msg, (err, result) => {
+      db.run(update, (err, result) => {
         if (err) reject(err);
         resolve(result);
+
+        // Increment logical clock on successful query
+        updateClock(timestamp);
+        console.log("Logical Time is: " + logicalTime);
       });
     }).catch((err) => console.log(err));
   });
   exports.dem = dem;
 };
 exports.setUpSubscribe = setUpSubscribe;
+exports.logicalTime = logicalTime;
+exports.incrementClock = incrementClock;
+exports.updateClock = updateClock;

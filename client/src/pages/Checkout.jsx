@@ -3,16 +3,71 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineDown } from "react-icons/ai";
 import { AiOutlineUp } from "react-icons/ai";
 import { useState } from "react";
-import { useCart } from "../utils/CartContext";
+import { useCart, useCartUpdate } from "../utils/CartContext";
+import { useLB } from "../utils/LoadBalancerContext";
+import Modal from "../components/Modal";
 
 const Checkout = () => {
-  const [isShowCart, setIsShowCart] = useState(false);
   const { cart } = useCart();
+  const { changeQty, resetCart } = useCartUpdate();
   const itemArr = Array.from(cart.keys());
+  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isShowCart, setIsShowCart] = useState(false);
+  const [isFetchSuccess, setIsFetchSuccess] = useState(false);
+  const { lbHealthCheck } = useLB();
+
   let total = 0;
   itemArr.map((e) => {
     total += cart.get(e).qty * cart.get(e).price;
   });
+
+  const sendOrder = async (data) => {
+    setShowModal(!showModal);
+    setIsLoading(true);
+
+    const curLB = await lbHealthCheck();
+    const URL = `${curLB}/api/addOrder`;
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    setTimeout(() => setIsLoading(false), 200);
+
+    if (res.status !== 200) {
+      const msg = await res.json();
+      for (const e in msg) {
+        const diff = msg[e] - cart.get(e).qty;
+        changeQty(cart.get(e), msg[e], diff);
+      }
+    } else {
+      setIsFetchSuccess(true);
+      resetCart();
+      console.log("Success");
+      window.location.href = "/Thankyou";
+    }
+  };
+
+  const handleOrderSubmit = () => {
+    const obj = {};
+    obj.userName = "test_user";
+    obj.subTotal = total;
+    obj.date = new Date();
+    obj.items = [];
+    for (const key of cart.keys()) {
+      const itemJSON = {};
+      const value = cart.get(key);
+      itemJSON.name = value.name;
+      itemJSON.price = value.price;
+      itemJSON.qty = value.qty;
+      itemJSON.size = value.size;
+      obj.items.push(itemJSON);
+    }
+    sendOrder(obj);
+  };
 
   return (
     <div className="w-[95%] md:max-w-[90%] lg:max-w-[80%] xl:max-w-[65%] flex flex-col lg:flex-row-reverse lg:gap-8">
@@ -40,7 +95,7 @@ const Checkout = () => {
             isShowCart ? "max-h-[100rem]" : "max-h-0"
           } lg:max-h-[min(35rem,100%)] bg-[#fafafa] transition-all duration-300 overflow-hidden rounded-sm flex-1 flex flex-col`}
         >
-          <div className="grid gap-4 my-4 flex-1 overflow-auto">
+          <div className="flex flex-col gap-4 my-4 flex-1 overflow-auto">
             {itemArr.map((e) => (
               <div
                 className="w-full flex gap-4 items-center px-2 h-fit"
@@ -103,7 +158,7 @@ const Checkout = () => {
             <div className="h-[1px] w-full bg-black"></div>
           </div>
 
-          <form className="mt-2 grid gap-y-4">
+          <div className="mt-2 grid gap-y-4">
             <div>
               <label>Email</label>
               <input className="w-full h-10 border-[#dadbdf] border-2 rounded-md px-3 mt-1 text-sm"></input>
@@ -116,7 +171,6 @@ const Checkout = () => {
               <label>Address</label>
               <input className="w-full h-10 border-[#dadbdf] border-2 rounded-md px-3 mt-1 text-sm"></input>
             </div>
-
             <div className="mt-2 grid grid-cols-[2fr,1fr] gap-x-4">
               <div>
                 <label>Card number</label>
@@ -146,12 +200,21 @@ const Checkout = () => {
                 ></input>
               </div>
             </div>
-            <button className="w-full bg-black text-white h-[2.5rem] mt-2 font-semibold">
+            <button
+              className="w-full bg-black text-white h-[2.5rem] mt-2 font-semibold"
+              onClick={handleOrderSubmit}
+            >
               PLACE ORDER
             </button>
-          </form>
+          </div>
         </div>
       </div>
+      <Modal
+        hidden={showModal}
+        setHidden={setShowModal}
+        isLoading={isLoading}
+        isFetchSuccess={isFetchSuccess}
+      ></Modal>
     </div>
   );
 };
