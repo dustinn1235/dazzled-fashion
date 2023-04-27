@@ -46,11 +46,11 @@ const CartItem = ({ item }) => {
       <Link
         to={`/shop/${item.name}`}
         state={item}
-        className="row-start-1 row-span-full"
+        className="row-start-1 row-span-full flex justify-center"
       >
         <img
           src={item.imgURL[0]}
-          className="h-fit max-h-full w-full object-contain aspect-[1/2]"
+          className="h-fit max-h-full w-full md:max-w-[70%] object-contain aspect-[1/2]"
         ></img>
       </Link>
       <Link

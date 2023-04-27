@@ -8,7 +8,7 @@ import { StockProvider } from "./utils/StockContext";
 import { LBProvider } from "./utils/LoadBalancerContext";
 import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
-import Thankyou from "./pages/Thankyou"; 
+import Thankyou from "./pages/Thankyou";
 /* TODO
 - Change Menu/Cart into icons
 - Create page for each product
@@ -34,7 +34,7 @@ function App() {
               <Route path="/shop/:id" element={<ProductPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/Thankyou" element={<Thankyou />} /> 
+              <Route path="/Thankyou" element={<Thankyou />} />
             </Routes>
             <Footer />
           </div>

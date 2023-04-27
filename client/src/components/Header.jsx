@@ -6,7 +6,7 @@ const Header = () => {
   const [isOpenModal, setIsOPenModal] = useState(false);
   const { numItem } = useCart();
   return (
-    <div className="flex cursor-crosshair mb-20 w-full lg:px-[5%]">
+    <div className="flex cursor-crosshair mb-10 md:mb-17 w-full lg:px-[5%]">
       <div className="flex-1 lg:flex items-center gap-x-6 hidden">
         <span className="font-bold text-lg">SHOP</span>
         <span className="font-bold text-lg">COLLECTIONS</span>
