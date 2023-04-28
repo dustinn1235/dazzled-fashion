@@ -1,7 +1,7 @@
 [
   {
-    "name": "TESTNAME1",
-    "price": 10,
+    "name": "Gary Leather Jacket",
+    "price": 2910,
     "imgURL": [
       "https://i.ibb.co/TKnkHkL/top1.webp",
       "https://i.ibb.co/8Kr8zbb/top1more1.webp",
@@ -10,8 +10,8 @@
     "sizes": ["S", "M"]
   },
   {
-    "name": "TESTNAME2",
-    "price": 15,
+    "name": "Calfskin Jacket",
+    "price": 2225,
     "imgURL": [
       "https://i.ibb.co/tbNV8r7/top2.webp",
       "https://i.ibb.co/y53Y4wz/top2more1.webp",
@@ -20,8 +20,8 @@
     "sizes": ["S", "M"]
   },
   {
-    "name": "TESTNAME3",
-    "price": 20,
+    "name": "Bolan Bootcut Jeans",
+    "price": 1500,
     "imgURL": [
       "https://i.ibb.co/g6cfxgw/bot1.webp",
       "https://i.ibb.co/wrswQBr/bot1more1.webp",
@@ -30,8 +30,8 @@
     "sizes": ["S", "M"]
   },
   {
-    "name": "TESTNAME4",
-    "price": 10,
+    "name": "Bauhaus Leather Pants",
+    "price": 3835,
     "imgURL": [
       "https://i.ibb.co/3m19dhM/bot2.webp",
       "https://i.ibb.co/LJxnS4F/bot2more1.webp",
@@ -40,8 +40,8 @@
     "sizes": ["S", "M"]
   },
   {
-    "name": "TESTNAME5",
-    "price": 10,
+    "name": "Geobasket Sneakers",
+    "price": 1525,
     "imgURL": [
       "https://i.ibb.co/T0MkHQt/shoe1.webp",
       "https://i.ibb.co/p2SBMGr/shoe1more1.webp",
@@ -51,8 +51,8 @@
     "sizes": ["S", "M"]
   },
   {
-    "name": "TESTNAME6",
-    "price": 10,
+    "name": "Lunar Tractor Boots",
+    "price": 2605,
     "imgURL": [
       "https://i.ibb.co/DCmPqHx/shoe2.webp",
       "https://i.ibb.co/0C1Hs36/shoe2more1.webp",
