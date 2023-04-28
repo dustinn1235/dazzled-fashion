@@ -21,9 +21,9 @@ const servers = [
   { url: "http://localhost:5002", isHealthy: true },
 ];
 // const servers = [
-//   { url: "http://backend:5000", isHealthy: true },
-//   { url: "http://backend:5001", isHealthy: true },
-//   { url: "http://backend:5002", isHealthy: true },
+//   { url: "http://backend1:5000", isHealthy: true },
+//   { url: "http://backend2:5001", isHealthy: true },
+//   { url: "http://backend3:5002", isHealthy: true },
 // ];
 
 let current = 0;
