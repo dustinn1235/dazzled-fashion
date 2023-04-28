@@ -26,29 +26,30 @@ const Checkout = () => {
     setShowModal(!showModal);
     setIsLoading(true);
 
-    const curLB = await lbHealthCheck();
-    const URL = `${curLB}/api/addOrder`;
-    const res = await fetch(URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    // const curLB = await lbHealthCheck();
+    // const URL = `${curLB}/api/addOrder`;
+    // const res = await fetch(URL, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
     setTimeout(() => setIsLoading(false), 200);
 
-    if (res.status !== 200) {
-      const msg = await res.json();
-      for (const e in msg) {
-        const diff = msg[e] - cart.get(e).qty;
-        changeQty(cart.get(e), msg[e], diff);
-      }
-    } else {
-      setIsFetchSuccess(true);
-      resetCart();
-      console.log("Success");
-      window.location.href = "/Thankyou";
-    }
+    // if (res.status !== 200) {
+    //   const msg = await res.json();
+    //   for (const e in msg) {
+    //     const diff = msg[e] - cart.get(e).qty;
+    //     changeQty(cart.get(e), msg[e], diff);
+    //   }
+    // } else {
+    //   setIsFetchSuccess(true);
+    //   resetCart();
+    //   console.log("Success");
+    //   window.location.href = "/Thankyou";
+    // }
+    window.location.href = "/Thankyou";
   };
 
   const handleOrderSubmit = () => {

@@ -17,17 +17,18 @@ const ProductPage = () => {
   //   S: 5,
   //   M: 2
   // }
-  const fetchQty = async () => {
-    try {
-      const curLB = await lbHealthCheck();
-      const url = `${curLB}/api/qty/${product.name}`;
-      const res = await fetch(url);
-      const qty = await res.json();
-      setQty(qty);
-    } catch (error) {
-      console.error("Error fetching quantity data:", error.message);
-    }
-  };
+  // const fetchQty = async () => {
+  //   try {
+  //     const curLB = await lbHealthCheck();
+  //     const url = `${curLB}/api/qty/${product.name}`;
+  //     const res = await fetch(url);
+  //     const qty = await res.json();
+  //     console.log(qty);
+  //     setQty(qty);
+  //   } catch (error) {
+  //     console.error("Error fetching quantity data:", error.message);
+  //   }
+  // };
 
   // Get update function
   const { addItem } = useCartUpdate();
@@ -41,7 +42,11 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    fetchQty();
+    let temp = {};
+    temp["S"] = 5;
+    temp["M"] = 0;
+    setQty(temp);
+    // fetchQty();
   }, []);
 
   // use to read value of sizeinput on page load. We need to figure if the first value is out of stock to toggle the button
