@@ -59,7 +59,7 @@ const ProductPage = () => {
     <div className="md:max-w-[90%] lg:max-w-[85%] xl:max-w-[80%] md:grid grid-cols-[2fr,1fr] gap-x-4 lg:gap-x-14">
       <Carousel product={product} />
       <div>
-        <h1 className="font-medium text-[1.5rem] w-[60%] break-words">
+        <h1 className="font-medium text-[1.5rem] w-full break-words">
           {product.name}
         </h1>
         <h2 className="text-[1.3rem]">${product.price.toFixed(2)}</h2>
