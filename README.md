@@ -1,4 +1,6 @@
 # DazzleD - Distributed Fashion E-commerce System
+## High-level architecture
+![image](https://user-images.githubusercontent.com/60798675/235328631-5561e350-6274-4e1f-8046-0e4f3d033205.png)
 
 ## Project snapshots
 <table>
@@ -30,26 +32,38 @@
   </tr>
 </table>
 
-## How to set up your environment
-
-1. Make sure you have the latest version of Node.js installed.
-2. unzip the project folder and open it in your favorite IDE. We recommend VSCode.
-3. Navigate to the project folder in your terminal
-4. To install the client side dependencies cd into the client folder and run `npm install`
-5. To install the server side dependencies cd into the server folder and run `npm install`
-
 ## How to run the system
-
+### Local set up
 1. Open three terminals (minimum) and navigate to the project folder in each one.
 2. In the first terminal, cd into the client folder and run `npm run dev` to start the client side.
 3. In the second terminal, cd into the server folder and run `node loadbalancer 4000` to start the load balancer on port 4000.
-4. In the third terminal, cd into the server folder and run `node reset` to initialize the server databases with the default data.
-5. In the third terminal, run `node server 5000` to start the server on port 4001.
+4. In the third terminal, run `node server 5000` to start the server on port 5000.
+5. Run `node reset` to initialize the server databases with the default data.
 6. Go to your web browser and navigate to `localhost:5173` to view the client side.
+
+### Run with docker-compose
+1. In server/loadbalancer.js, uncomment
+```
+const servers = [
+{ url: "http://backend1:5000", isHealthy: true },
+{ url: "http://backend2:5001", isHealthy: true },
+{ url: "http://backend3:5002", isHealthy: true },
+];
+```
+and comment out
+```
+const servers = [
+  { url: "http://localhost:5000", isHealthy: true },
+  { url: "http://localhost:5001", isHealthy: true },
+  { url: "http://localhost:5002", isHealthy: true },
+];
+```
+2. docker-compose build
+3. docker-compose up
 
 ## FYI
 
-- You can run any combination of up to 2 load balancers and 3 servers on your local machine. Just make sure to open a new terminal, cd into the server folder, and run `node server <port>` for each server you want to run. For the load balancer, run `node loadbalancer <port>` for each load balancer you want to run.
+- You can run any combination of up to 2 load balancers and 3 servers on your local machine.
 - Current load balancer ports are 4000 and 4001.
 - Current server ports are 5000, 5001, and 5002.
 - You can also open another terminal, cd to the client folder, and run `npm run dev` to run a secondary instance of the client side on your local machine. In this case, navigate to `localhost:5174` to view the secondary client.
