@@ -1,4 +1,8 @@
 # DazzleD - Distributed Fashion E-commerce System
+## Project description
+Here's the url to the website user interface: [Visit DazzleD](https://dazzledd.netlify.app/)
+
+DazzleD is a distributed fashion e-commerce system that specializes in dropping limited edition clothing. There will be a lot of traffic when the limited edition items are released, so a distributed system is used to divide the workload and make the system highly scalable. The project is inspired by websites such as yeezysupply.com and supreme.com.
 ## High-level architecture
 ![image](https://user-images.githubusercontent.com/60798675/235328631-5561e350-6274-4e1f-8046-0e4f3d033205.png)
 
